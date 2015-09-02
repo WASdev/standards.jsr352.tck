@@ -29,9 +29,9 @@ to test their own implementations against the TestNG portion of the TCK
 
 ### com.ibm.jbatch.tck.dist.exec
 
-"Official" execution of the TestNG portion of the TCK (TestNG + SigTest) against the RI (configured for SE mode).
+"Official" execution of the full TCK (both TestNG + SigTest) against the RI (configured for SE mode).
 Again, in addition to providing testing of the RI and the TCK distribution, this also serves as a sample for how other modules might consume the
-official TCK zip distribution and use the Ant scripts to test their own implementations against the TestNG portion of the TCK.
+official TCK zip distribution and use the Ant scripts to test their own implementations against the TestNG and SigTest portions of the TCK.
 
 
 ## TCK properties files explained
