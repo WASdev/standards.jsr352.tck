@@ -4,15 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.ibm.jbatch</groupId>
-        <artifactId>jbatch-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <groupId>com.ibm.jbatch.tck</groupId>
+        <artifactId>tck-parent</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.ibm.jbatch.tck</groupId>
     <artifactId>com.ibm.jbatch.tck.dist</artifactId>
     <packaging>pom</packaging>
-    <!-- TCK artifacts will be separately versioned -->
     <version>1.0.1-SNAPSHOT</version>
     <name>JSR 352 TCK Distribution ZIP</name>
     <dependencies>
