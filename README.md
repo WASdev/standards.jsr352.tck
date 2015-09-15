@@ -25,7 +25,16 @@ This is basically the same form factor as the existing SE TCK zip (expanded to i
 
 "Unofficial" execution of the TestNG (only, not SigTest) portion of the TCK against the RI (configured for SE mode).
 In addition to providing testing of the various RI and TCK modules, this also serves as a sample for how other modules might consume the TCK
-to test their own implementations against the TestNG portion of the TCK
+to test their own implementations against the TestNG portion of the TCK.
+
+#### TestNG Suite definition in XML
+The Maven execution will use the **maven-failsafe-plugin** to execute the TestNG suite definition at location **com.ibm.jbatch.tck.exec/testng.suite.xml**.  
+If this file is not already present then the suite definition at [jsr352-tck-impl-SE-suite.xml](com.ibm.jbatch.tck/testng/jsr352-tck-impl-SE-suite.xml), which configures the full
+TestNG portion of the SE TCK, will be copied into this location so that **maven-failsafe-plugin** will be (unofficially) executing the full TestNG portion of the SE TCK.
+
+##### Running a subset of the full suite for easier debugging
+For easier debugging, note that a subset of the full TCK suite can be executed using the TestNG suite definition mentioned above.
+The [jsr352-tck-impl-SE-suite.xml](com.ibm.jbatch.tck/testng/jsr352-tck-impl-SE-suite.xml) file has a helpful, commented-out example of how to run a subset of the full suite.
 
 ### com.ibm.jbatch.tck.dist.exec
 
@@ -69,3 +78,4 @@ repo, though **default.tck.exec.properties** is committed into Git and will be c
 #### Other IBM GitHub projects
 
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+

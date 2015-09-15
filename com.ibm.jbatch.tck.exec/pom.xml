@@ -92,6 +92,10 @@
                                       tofile="${project.basedir}/test.properties"
                                       overwrite="false">
                                 </copy>
+                                <copy file="${project.basedir}/../com.ibm.jbatch.tck/testng/jsr352-tck-impl-SE-suite.xml"
+                                      tofile="${project.basedir}/testng.suite.xml"
+                                      overwrite="false">
+                                </copy>
                             </target>
                         </configuration>
                     </execution>
@@ -129,11 +133,11 @@
                         <goals>
                             <goal>integration-test</goal>
                         </goals>
+                        <!-- This can't be used as an "official" TCK run, since we're running against the local copy of the test suite definition -->
                         <configuration>
-                            <includes>
-                                <include>**/**Test*.java</include>
-                                <include>**/**Test*.class</include>
-                            </includes>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>${project.basedir}/testng.suite.xml</suiteXmlFile>
+                            </suiteXmlFiles>
                             <systemPropertiesFile>${project.basedir}/test.properties</systemPropertiesFile>
                         </configuration>
                     </execution>
