@@ -5,9 +5,9 @@
 
         <!--  The official SE TCK test suite is the full set of tests in test classes with classname:
               com.ibm.jbatch.tck.tests.jslxml.*, (minus tests removed from execution via an @Ignore annotation). -->
-        <packages>
+        <!-- <packages>
             <package name="com.ibm.jbatch.tck.tests.jslxml" />
-        </packages>
+        </packages> -->
 
 
         <!--  Below is a sample syntax for debugging either an implementation or the TCK itself.  Note that modifying this 
@@ -15,12 +15,17 @@
               a run of a different set of test cases than the official TCK test suite. -->
 
         <!-- Just execute a single method within this test class.  -->
-        <!--
-            <class name="com.ibm.jbatch.tck.tests.jslxml.ChunkTests">
+        <!-- 
+            <class name="com.ibm.jbatch.tck.tests.jslxml.ParallelContextPropagationTest">
+                <methods>
+                    <include name="testPartitionContextPropagation"/> 
+                    <include name="testSplitFlowContextPropagation"/> 
+                </methods>
+            </class>  -->
+       <class name="com.ibm.jbatch.tck.tests.jslxml.ChunkTests">
                 <methods>
                     <include name="testChunkRestartChunk5"/> 
                 </methods>
             </class> 
-        -->
     </test>
 </suite>
