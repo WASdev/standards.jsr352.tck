@@ -16,11 +16,13 @@
 
         <!-- Just execute a single method within this test class.  -->
         <!--
+        <classes>
             <class name="com.ibm.jbatch.tck.tests.jslxml.ChunkTests">
                 <methods>
                     <include name="testChunkRestartChunk5"/> 
                 </methods>
             </class> 
+        </classes>
         -->
     </test>
 </suite>
