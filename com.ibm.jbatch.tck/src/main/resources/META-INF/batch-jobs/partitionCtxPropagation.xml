@@ -23,11 +23,11 @@
 		<properties>
 			<property name="topLevelStepProperty" value="topLevelStepProperty.value" />		
 		</properties>
-		<batchlet ref="ParallelContextPropagationTestPB"/>
+		<batchlet ref="PCPProcessBatchlet"/>
 		<partition>
 			<plan partitions="3"/>
-			<collector ref="ParallelContextPropagationTestC" />
-			<analyzer ref="ParallelContextPropagationTestA" />
+			<collector ref="PCPCollector" />
+			<analyzer ref="PCPAnalyzer" />
 		</partition>
 	</step>
 </job>

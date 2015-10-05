@@ -32,6 +32,7 @@ import javax.batch.runtime.context.StepContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 import static org.junit.Assert.assertEquals;
 
@@ -43,36 +44,36 @@ import org.testng.annotations.Test;
 
 public class ParallelContextPropagationTest {
 
-	//private static JobOperatorBridge jobOp = null;
-	private static JobOperator jobOp;
+	private static JobOperatorBridge jobOp = null;
 	private static int sleepTime = 20000;
 	
 	@BeforeMethod
 	@BeforeClass
 	public static void setup() throws Exception {
-		//jobOp = new JobOperatorBridge();
-		jobOp = BatchRuntime.getJobOperator();
+		jobOp = new JobOperatorBridge();
 	}
 
 
     /*
      * @testName: testPartitionContextPropagation
-     * @assertion:
-     * @test_Strategy: 
+     * 
+     * @assertion: Ensure that execution ID, instance ID, and step execution ID stay consistant through a fixed amount of partitions
+     * 
+     * @test_Strategy: get all id's then execute jobs while checking the initial recorded id values against the values being returned
+     * from the partitions ran
      */
 	@Test
 	@org.junit.Test
-	//@TCKCandidate("Probably a good one to add given confusion caused by Bug 5164")
 	public void testPartitionContextPropagation() throws Exception {
 		
-		long theExecId = jobOp.start("partitionCtxPropagation", null);
+		JobExecution je = jobOp.startJobAndWaitForResult("partitionCtxPropagation", null);
 		Thread.sleep(sleepTime);
 		
 		// Check job COMPLETED since some validation is crammed into the execution.
-		JobExecution je = jobOp.getJobExecution(theExecId);
 		assertEquals("Test successful completion", "COMPLETED", je.getBatchStatus().toString());
 
-		// Get the correct instance id
+		// Get the correct exec id and instance id
+		long theExecId = je.getExecutionId();
 		long theInstanceId = jobOp.getJobInstance(theExecId).getInstanceId();
 		
 		// Get the correct step execution id
@@ -109,22 +110,24 @@ public class ParallelContextPropagationTest {
 
     /*
      * @testName: testSplitFlowContextPropagation
-     * @assertion:
-     * @test_Strategy: 
+     * 
+     * @assertion: Ensure that execution ID, instance ID, and step execution ID stay consistant through splits and flows
+     * 
+     * @test_Strategy: get all id's then execute jobs while checking the initial recorded id values against the values being returned
+     * from within the split flows in the job
      */
 	@Test
 	@org.junit.Test
-	//@TCKCandidate("Probably a good one to add given confusion caused by Bug 5164")
 	public void testSplitFlowContextPropagation() throws Exception {
 
-		long theExecId = jobOp.start("splitFlowCtxPropagation", null);
+		JobExecution je = jobOp.startJobAndWaitForResult("splitFlowCtxPropagation", null);
 		Thread.sleep(sleepTime);
 
 		// Check job COMPLETED since some validation is crammed into the execution.
-		JobExecution je = jobOp.getJobExecution(theExecId);
 		assertEquals("Test successful completion", "COMPLETED", je.getBatchStatus().toString());
 
 		// Get the correct instance id
+		long theExecId = je.getExecutionId();
 		long theInstanceId = jobOp.getJobInstance(theExecId).getInstanceId();
 		
 		List<StepExecution> stepExecutions = jobOp.getStepExecutions(theExecId);
@@ -142,113 +145,6 @@ public class ParallelContextPropagationTest {
 
 			String stepId = toParse.substring(toParse.indexOf("S") + 1);
 			assertEquals("check step execution id", se.getStepExecutionId(), Long.parseLong(stepId));
-		}
-	}
-
-
-	/**
-	 * 
-	 * Test artifacts below
-	 *
-	 */
-	public static String GOOD_EXIT_STATUS = "VERY GOOD INVOCATION";
-	
-	@Named("ParallelContextPropagationTestSFB")
-	public static class SFB extends AbstractBatchlet {
-
-		@Inject JobContext jobCtx;  @Inject StepContext stepCtx;
-
-		@Override
-		public String process() throws Exception {
-
-			// Check job properties
-			/*
-			 * <property name="topLevelJobProperty" value="topLevelJobProperty.value" />
-			 */
-			String propVal = jobCtx.getProperties().getProperty("topLevelJobProperty");
-			String expectedPropVal = "topLevelJobProperty.value";
-
-			if (propVal == null || (!propVal.equals(expectedPropVal))) {
-				throw new Exception("Expected propVal of " + expectedPropVal + ", but found: " + propVal);
-			}
-
-			// Check job name
-			String jobName = jobCtx.getJobName();
-			String expectedJobName = "splitFlowCtxPropagation";
-			if (!jobName.equals(expectedJobName)) {
-				throw new Exception("Expected jobName of " + expectedJobName + ", but found: " + jobName);
-			}
-
-			String data = stepExitStatus();
-			stepCtx.setExitStatus(stepCtx.getExitStatus() + data);
-			return GOOD_EXIT_STATUS;
-		}
-
-		private String stepExitStatus() {
-			long execId = jobCtx.getExecutionId();
-			long instanceId = jobCtx.getInstanceId();
-			long stepExecId = stepCtx.getStepExecutionId();
-
-			return ":J" + execId + "I" + instanceId + "S" + stepExecId;
-		}
-	}
-
-	@Named("ParallelContextPropagationTestPB")
-	public static class PB extends AbstractBatchlet {
-
-		@Inject JobContext jobCtx; @Inject StepContext stepCtx;
-
-		@Override
-		public String process() throws Exception {
-
-			// Check job properties
-
-			/*
-			 * <property name="topLevelJobProperty" value="topLevelJobProperty.value" />
-			 */
-			String propVal = jobCtx.getProperties().getProperty("topLevelJobProperty");
-			assertEquals("Job Property comparison", "topLevelJobProperty.value", propVal);
-			
-			propVal = stepCtx.getProperties().getProperty("topLevelStepProperty");
-			assertEquals("Step Property comparison", "topLevelStepProperty.value", propVal);
-			
-			assertEquals("Job name", "partitionCtxPropagation", jobCtx.getJobName());
-
-			assertEquals("Step name", "step1", stepCtx.getStepName());
-
-			return GOOD_EXIT_STATUS;
-		}
-
-		@Override
-		public void stop() throws Exception {}
-	}
-
-	@Named("ParallelContextPropagationTestC")
-	public static class C implements PartitionCollector {
-
-		@Inject JobContext jobCtx; @Inject StepContext stepCtx;
-
-		@Override
-		public String collectPartitionData() throws Exception {
-
-			assertEquals("step name", "step1", stepCtx.getStepName());
-
-			long jobid = jobCtx.getExecutionId();
-			long instanceid = jobCtx.getInstanceId();
-			long stepid = stepCtx.getStepExecutionId();
-
-			return ":J" + jobid + "I" + instanceid + "S" + stepid;
-		}
-	}
-
-	@Named("ParallelContextPropagationTestA")
-	public static class A extends AbstractPartitionAnalyzer {
-
-		@Inject JobContext jobCtx;
-
-		@Override
-		public void analyzeCollectorData(Serializable data) throws Exception {
-			jobCtx.setExitStatus(jobCtx.getExitStatus() + data);
 		}
 	}
 }
