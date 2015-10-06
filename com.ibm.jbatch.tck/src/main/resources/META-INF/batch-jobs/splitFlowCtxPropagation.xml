@@ -16,12 +16,12 @@
 	<split id="split1">
 		<flow id="flow1">
 			<step id="flow1step1">
-				<batchlet ref="PCPCheckJobBatchlet"/>
+				<batchlet ref="PCPSplitFlowBatchlet"/>
 			</step>
 		</flow>
 		<flow id="flow2">
 			<step id="flow2step1">
-				<batchlet ref="PCPCheckJobBatchlet"/>
+				<batchlet ref="PCPSplitFlowBatchlet"/>
 			</step>
 		</flow>
 	</split>

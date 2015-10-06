@@ -92,10 +92,10 @@
     <ref id="numbersSkipReadListener" class="com.ibm.jbatch.tck.artifacts.specialized.NumbersSkipReadListener" />
     <ref id="numbersSkipWriteListener" class="com.ibm.jbatch.tck.artifacts.specialized.NumbersSkipWriteListener" />
     <ref id="overrideOnAttributeValuesUponRestartBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.OverrideOnAttributeValuesUponRestartBatchlet" />
-    <ref id="PCPAnalyzer" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPAnalyzer" />
-    <ref id="PCPCheckJobBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPCheckJobBatchlet" />
+    <ref id="PCPAnalyzer" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPAnalyzer" />    
     <ref id="PCPCollector" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPCollector" />
-    <ref id="PCPProcessBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPProcessBatchlet" />
+    <ref id="PCPPartitionBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPPartitionBatchlet" />
+    <ref id="PCPSplitFlowBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.ParallelContextPropagationArtifacts$PCPSplitFlowBatchlet" />
     <ref id="parsingPartitionAnalyzer" class="com.ibm.jbatch.tck.artifacts.specialized.ParsingPartitionAnalyzer" />
     <ref id="skipProcessor" class="com.ibm.jbatch.tck.artifacts.specialized.SkipProcessor" />
     <ref id="skipReader" class="com.ibm.jbatch.tck.artifacts.specialized.SkipReader" />

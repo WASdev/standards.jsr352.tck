@@ -44,8 +44,8 @@ public class ParallelContextPropagationArtifacts {
 
 public static String GOOD_EXIT_STATUS = "VERY GOOD INVOCATION";
 	
-	@javax.inject.Named("PCPCheckJobBatchlet")
-	public static class PCPCheckJobBatchlet extends AbstractBatchlet {
+	@javax.inject.Named("PCPSplitFlowBatchlet")
+	public static class PCPSplitFlowBatchlet extends AbstractBatchlet {
 
 		@Inject JobContext jobCtx;
 		@Inject StepContext stepCtx;
@@ -85,8 +85,8 @@ public static String GOOD_EXIT_STATUS = "VERY GOOD INVOCATION";
 		}
 	}
 
-	@javax.inject.Named("PCPProcessBatchlet")
-	public static class PCPProcessBatchlet extends AbstractBatchlet {
+	@javax.inject.Named("PCPPartitionBatchlet")
+	public static class PCPPartitionBatchlet extends AbstractBatchlet {
 
 		@Inject JobContext jobCtx; @Inject StepContext stepCtx;
 

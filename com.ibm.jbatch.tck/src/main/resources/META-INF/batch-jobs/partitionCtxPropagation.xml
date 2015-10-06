@@ -23,7 +23,7 @@
 		<properties>
 			<property name="topLevelStepProperty" value="topLevelStepProperty.value" />		
 		</properties>
-		<batchlet ref="PCPProcessBatchlet"/>
+		<batchlet ref="PCPPartitionBatchlet"/>
 		<partition>
 			<plan partitions="3"/>
 			<collector ref="PCPCollector" />
