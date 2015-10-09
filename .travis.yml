@@ -1,7 +1,6 @@
 language: java
 
 install: 
- - mkdir RI
  - git clone https://github.com/WASdev/standards.jsr352.jbatch
  - cd standards.jsr352.jbatch
  - mvn clean install
