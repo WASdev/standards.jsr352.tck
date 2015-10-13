@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <display-name>web_vehicle</display-name>
+  <servlet>
+    <servlet-name>Servlet_VehicleLogicalName</servlet-name>
+    <servlet-class>com.sun.ts.tests.common.vehicle.servlet.ServletVehicle</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>jsp_vehicle</servlet-name>
+    <jsp-file>/jsp_vehicle.jsp</jsp-file>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Servlet_VehicleLogicalName</servlet-name>
+    <url-pattern>/servlet_vehicle</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>54</session-timeout>
+  </session-config>
+  <resource-ref>
+    <res-ref-name>jdbc/orderDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+</web-app>

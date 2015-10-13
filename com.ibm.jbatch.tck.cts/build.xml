@@ -1,0 +1,222 @@
+<!--
+  Copyright 2015 International Business Machines Corp.
+  
+  See the NOTICE file distributed with this work for additional information
+  regarding copyright ownership. Licensed under the Apache License, 
+  Version 2.0 (the "License"); you may not use this file except in compliance
+  with the License. You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+
+ <!-- 
+   0) mvn clean
+   1) mvn process-sources -Dcts
+   2) ant -Dtransform.dir=working.basedir/javaSource/
+   3) mvn assembly:single -Dcts
+ -->      
+
+<project name="cts" default="genCTS">
+
+    <!-- The classes holding the @Test-annotated test methods -->
+    <fileset id="testMethods" dir="${transform.dir}/com/ibm/jbatch/tck/tests">
+        <include name="**/*.java"/>
+    </fileset>
+
+    <fileset id="allClasses" dir="${transform.dir}/com/ibm/jbatch/tck">
+        <include name="**/*.java"/>
+        <exclude name="com/ibm/jbatch/tck/annotations/**/*.java"/>
+    </fileset>
+
+    <target name="genCTS" depends="inheritSuperClass, convertToTestUtil, removeJunitTestNG"/>
+
+    <!-- Modify the class declaration to extend ServiceEETest and add import for package
+         containing the ServiceEETest class -->
+    <target name="inheritSuperClass">
+        <replaceregexp>
+            <regexp pattern="(public class\s*[^\s]*\s)"/>
+            <substitution expression="\1extends ServiceEETest "/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+    </target>
+
+    <target name="convertToTestUtil">
+        <replaceregexp>
+            <regexp pattern="(package.*)"/>
+            <substitution expression="\1${line.separator}${line.separator}import com.sun.ts.lib.harness.*;${line.separator}import com.sun.ts.lib.util.TestUtil;"/>
+            <fileset refid="allClasses"/>
+        </replaceregexp>
+
+        <replaceregexp flags="g">
+            <regexp pattern="(.*)throws Exception"/>
+            <substitution expression="\1throws Fault"/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+        <replaceregexp flags="g">
+            <regexp pattern="throws Exception"/>
+            <substitution expression="throws Fault"/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+        <!--<replaceregexp flags="gs">
+             <regexp pattern="catch\s*\(Exception e\).*?}"/>
+             <substitution expression=
+                            "catch\(Exception e\) {${line.separator}TestUtil.logErr(&quot;Caught exception: &quot; 
+                            + e.getMessage());${line.separator}TestUtil.printStackTrace(e);${line.separator}throw new Fault(METHOD + &quot; failed&quot;, e);}"/>
+            <fileset refid="testMethods"/>
+             </replaceregexp>-->
+
+        <replaceregexp flags="gs">
+            <regexp pattern="private static void handleException.*?}"/>
+            <substitution expression=
+                                    "private static void handleException\(String methodName, Exception e\) throws Fault {${line.separator}TestUtil.logErr(&quot;Caught exception: &quot; 
+                                    + e.getMessage());${line.separator}TestUtil.printStackTrace(e);${line.separator}throw new Fault(methodName + &quot; failed&quot;, e);}"/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+
+        <replaceregexp flags="g">
+            <regexp pattern="(String METHOD.*)"/>
+            <substitution expression=
+                                    "\1${line.separator}TestUtil.logTrace\(METHOD\);"/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+        <replaceregexp flags="g">
+            <regexp pattern="Reporter.log*"/>
+            <substitution expression=
+                                        "TestUtil.logMsg"/>
+            <fileset refid="allClasses"/>
+        </replaceregexp>
+
+        <replaceregexp flags="g">
+            <regexp pattern="\+&quot;&lt;p>&quot;"/>
+            <substitution expression=
+                                                ""/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+        <replaceregexp flags="g">
+            <regexp pattern="&lt;p>"/>
+            <substitution expression=
+                                                        ""/>
+            <fileset refid="testMethods"/>
+        </replaceregexp>
+
+        <!--<replaceregexp flags="g">
+                 <regexp pattern="Reporter.log\((.*),.*"/>
+                 <substitution expression="TestUtil.logMsg\(\1\);"/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>-->
+    </target>
+
+    <!-- Remove Junit package import and annotations from source files -->
+    <target name="removeJunitTestNG">
+        <sequential>
+            <replaceregexp flags="g">
+                <regexp pattern="(import org.junit.*)"/>
+                <substitution expression=""/>
+                <fileset refid="allClasses"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="(@org.junit.*)"/>
+                <substitution expression=""/>
+                <fileset refid="allClasses"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="(import org.testng.*)"/>
+                <substitution expression=""/>
+                <fileset refid="allClasses"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@BeforeClass"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@BeforeMethod"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@Test\(enabled=false\)"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+
+            <replaceregexp flags="g">
+                <regexp pattern="@Test\(enabled = false\)"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@Test"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+
+
+            <replaceregexp flags="g">
+                <regexp pattern="@AfterClass"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@AfterMethod"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@AfterTest"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@BeforeTest"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <replaceregexp flags="g">
+                <regexp pattern="@Ignore.*"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <!-- Now that @BeforeTest and others have been removed -->
+
+            <replaceregexp flags="g">
+                <regexp pattern="@Before"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+
+            <!-- Now that @AfterTest and others have been removed -->
+            <replaceregexp flags="g">
+                <regexp pattern="@After"/>
+                <substitution expression=""/>
+                <fileset refid="testMethods"/>
+            </replaceregexp>
+        </sequential>
+    </target>
+
+</project>

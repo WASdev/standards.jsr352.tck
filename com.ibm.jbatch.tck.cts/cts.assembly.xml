@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>batch-cts-assembly</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <baseDirectory>${assembly.dir}</baseDirectory>
+
+    <fileSets>
+        <!-- DDLs -->
+        <fileSet>
+            <directory>${sql.dir}/temp</directory>
+            <outputDirectory>/sql</outputDirectory>
+        </fileSet>
+        <!-- Build file snippet thingies for CTS -->
+        <fileSet>
+            <directory>${project.basedir}/buildFiles/src/com/ibm/jbatch/tck/tests</directory>
+            <outputDirectory>/src/com/ibm/jbatch/tck/tests</outputDirectory>
+        </fileSet>
+        <!-- Transformed Java source -->
+        <fileSet>
+            <directory>${transform.dir}</directory>
+            <outputDirectory>/src</outputDirectory>
+        </fileSet>
+        <!-- Job XML, META-INF/services, and batch.xml -->
+        <fileSet>
+            <directory>${xml.and.resources.basedir}</directory>
+            <outputDirectory>${xml.and.resources.path}</outputDirectory>
+        </fileSet>
+        <!-- Beans.xml -->
+        <fileSet>
+            <directory>${beans.xml.dir}${fs}META-INF</directory>
+            <outputDirectory>${jslxml.path}</outputDirectory>
+        </fileSet>
+        <!-- Beans.xml -->
+        <fileSet>
+            <directory>${beans.xml.dir}${fs}META-INF</directory>
+            <outputDirectory>${ee.path}</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+</assembly>
+

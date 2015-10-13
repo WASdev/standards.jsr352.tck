@@ -145,6 +145,7 @@
     <modules>
         <module>com.ibm.jbatch.tck</module>
         <module>com.ibm.jbatch.tck.spi</module>
+        <module>com.ibm.jbatch.tck.cts</module>
         <module>com.ibm.jbatch.tck.exec</module>
         <module>com.ibm.jbatch.tck.dist</module>
         <module>com.ibm.jbatch.tck.dist.exec</module>
