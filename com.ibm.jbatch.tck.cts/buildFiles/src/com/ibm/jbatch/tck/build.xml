@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="com_ibm_jbatch_tck">
+  <import file="../../../../../bin/xml/ts.nonleafimport.xml" />
+</project>
+

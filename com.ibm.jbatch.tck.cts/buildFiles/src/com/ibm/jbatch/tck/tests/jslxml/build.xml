@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="jslxml" basedir="."> 
+  
+    <import file="../../../../../../../bin/xml/ts.import.xml"/>
+
+    <target name="package">
+        <ts.vehicles name="jslxml" classes="com/ibm/jbatch/tck/**/*.class">
+            <servlet-elements>
+                <zipfileset dir="${src.dir}/com/ibm/jbatch/tck/testJobXml" prefix="WEB-INF/classes"/>
+                <zipfileset dir="${src.dir}/com/ibm/jbatch/tck/tests/jslxml" includes="beans.xml" prefix="WEB-INF"/>
+            </servlet-elements>
+            <jsp-elements>
+                <zipfileset dir="${src.dir}/com/ibm/jbatch/tck/testJobXml" prefix="WEB-INF/classes"/>
+                <zipfileset dir="${src.dir}/com/ibm/jbatch/tck/tests/jslxml" includes="beans.xml" prefix="WEB-INF"/>
+            </jsp-elements>
+            <ejb-elements>
+                <fileset dir="${src.dir}/com/ibm/jbatch/tck/testJobXml"/>
+                <zipfileset dir="${src.dir}/com/ibm/jbatch/tck/tests/jslxml" includes="beans.xml" prefix="META-INF"/>
+            </ejb-elements>
+        </ts.vehicles>
+    </target>
+	
+    <target name="-precompile">
+        <ts.javac includes="com/ibm/jbatch/tck/artifacts/**,
+                            com/ibm/jbatch/tck/utils/**,
+                            com/ibm/jbatch/tck/spi/**,
+                            com/ibm/jbatch/tck/polling/**"/>
+    </target>
+	    
+    <target name="-preclean">
+        <ts.clean.classes dir="${class.dir}/com/ibm/jbatch/tck/artifacts"/>
+        <ts.clean.classes dir="${class.dir}/com/ibm/jbatch/tck/utils"/>
+        <ts.clean.classes dir="${class.dir}/com/ibm/jbatch/tck/spi"/>
+        <ts.clean.classes dir="${class.dir}/com/ibm/jbatch/tck/polling"/>
+    </target>
+
+</project>

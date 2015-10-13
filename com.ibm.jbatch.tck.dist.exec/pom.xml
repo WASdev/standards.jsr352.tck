@@ -128,6 +128,7 @@
                         </goals>
                         <phase>integration-test</phase>
                         <configuration>
+                            <skip>${skipTests}</skip>
                             <target>
                                 <ant dir="target${fs}executeTCK${fs}com.ibm.jbatch.tck-${batch.tck.version}" target="run"/>
                                 <ant dir="target${fs}executeTCK${fs}com.ibm.jbatch.tck-${batch.tck.version}" antfile="sigtest.build.xml" target="runSigTest"/>
