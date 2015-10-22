@@ -17,7 +17,6 @@
 package com.ibm.jbatch.tck.tests.jslxml;
 
 import static com.ibm.jbatch.tck.utils.AssertionUtils.assertWithMessage;
-import static org.junit.Assert.assertEquals;
 
 import java.util.Properties;
 
@@ -29,6 +28,8 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.ibm.jbatch.tck.annotations.APIRef;
+import com.ibm.jbatch.tck.annotations.TCKTest;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 
@@ -41,14 +42,23 @@ public class ListenerOnErrorTests {
 		jobOp = new JobOperatorBridge();
 	}
 
-    /*
+    /**
      * @testName: testOnWriteErrorItems
      * 
-     * @assertion: Ensure Job has failed and on Error ensure the writeListener returns the right items
+     * @assertion: Ensure the ItemWriteListener onWriteError is passed the right items, 
+     *   the input to writeItems (which was the aggregate output of the processor's processItem for this chunk).
      * 
-     * @test_Strategy: Intentionally fail writer and ensure the onError method returns the correct string
-     * 					of items
+     * @test_Strategy: Intentionally fail writer at a specific record number.  Take the items passed as input
+     *   parameter to onWriteError, and set a String representation of this List as the job's exit status, which
+     *   will assert matches the expected value based on the chunk size and the input data and the failing record number.  
+     *   Also check the job fails.
      */
+	@TCKTest(
+			apiRef={
+					@APIRef(className="javax.batch.api.chunk.listener.ItemWriteListener", methodName="onWriteError"),
+			},
+			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5431",
+			tckVersionUpdated="1.1.WORKING")
 	@Test
 	@org.junit.Test
 	public void testOnWriteErrorItems() throws Exception {
@@ -69,14 +79,22 @@ public class ListenerOnErrorTests {
 	    assertWithMessage("Testing execution for the WRITE LISTENER", GOOD_EXIT_STATUS, je.getExitStatus());
 	}
 
-    /*
+    /**
      * @testName: testOnProcessErrorItems
      * 
-     * @assertion: Ensure Job has failed and on Error ensure the procesListener returns the right items
+     * @assertion: Ensure the ItemProcessListener onProcessError is passed the right item, 
+     *   the input to processItem (the  output of the reader's readItem).
      * 
-     * @test_Strategy: Intentionally fail processor and ensure the onError method returns the correct string
-     * 					of items
+     * @test_Strategy: Intentionally fail processor at a specific record number.  Take the item passed as input
+     *   parameter to onProcessError, and set a String representation of this item as the job's exit status, which
+     *   we assert matches the expected value based on the input data and the failing record number.  Also check the job fails.
      */
+	@TCKTest(
+			apiRef={
+					@APIRef(className="javax.batch.api.chunk.listener.ItemProcessListener", methodName="onProcessError"),
+			},
+			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5431",
+			tckVersionUpdated="1.1.WORKING")
 	@Test
 	@org.junit.Test
 	public void testOnProcessErrorItems() throws Exception {
