@@ -92,16 +92,13 @@
                                       tofile="${project.basedir}/test.properties"
                                       overwrite="false">
                                 </copy>
-                                <copy file="${project.basedir}/../com.ibm.jbatch.tck/testng/jsr352-tck-impl-SE-suite.xml"
-                                      tofile="${project.basedir}/testng.suite.xml"
-                                      overwrite="false">
-                                </copy>
                             </target>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
+                <!-- Not sure how to reference the suite XML file within the dependency artifact, so rely on an unpacking first.-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -111,17 +108,18 @@
                             <goal>unpack</goal>
                         </goals>
                         <phase>pre-integration-test</phase>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.ibm.jbatch.tck</groupId>
-                                    <artifactId>com.ibm.jbatch.tck</artifactId>
-                                    <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.ibm.jbatch.tck</groupId>
+                            <artifactId>com.ibm.jbatch.tck</artifactId>
+                            <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                            <includes>testng/*</includes>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -133,10 +131,10 @@
                         <goals>
                             <goal>integration-test</goal>
                         </goals>
-                        <!-- This can't be used as an "official" TCK run, since we're running against the local copy of the test suite definition -->
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>${project.basedir}/testng.suite.xml</suiteXmlFile>
+                                <!-- Not sure how to reference the suite XML file within the dependency artifact, so rely on an unpacking first.-->
+                                <suiteXmlFile>${project.build.directory}/test-classes/testng/jsr352-tck-impl-SE-suite.xml</suiteXmlFile>
                             </suiteXmlFiles>
                             <systemPropertiesFile>${project.basedir}/test.properties</systemPropertiesFile>
                         </configuration>

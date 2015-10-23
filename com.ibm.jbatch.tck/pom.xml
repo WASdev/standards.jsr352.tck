@@ -39,10 +39,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.ibm.jbatch</groupId>
-            <artifactId>com.ibm.jbatch.container</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
         </dependency>

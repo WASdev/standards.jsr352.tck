@@ -142,6 +142,17 @@
         <version.net.java.sigtest.sigtestdev>3.0-b12-v20140219</version.net.java.sigtest.sigtestdev>
     </properties>
 
+<!-- For releasing snapshots, will leave commented out until I understand the implications -->
+<!--
+    <repositories>
+      <repository>
+        <id>jvnet-nexus-snapshots</id>
+        <name>Maven Java Net Snapshots and Releases</name>
+        <url>https://maven.java.net/content/repositories/snapshots/</url>
+      </repository>
+    </repositories>
+-->
+
     <modules>
         <module>com.ibm.jbatch.tck</module>
         <module>com.ibm.jbatch.tck.spi</module>
