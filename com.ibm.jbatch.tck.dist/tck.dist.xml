@@ -70,11 +70,11 @@
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
-            <source>../com.ibm.jbatch.tck/testng/jsr352-tck-impl-SE-suite.xml</source>
+            <source>../com.ibm.jbatch.tck/src/main/resources/testng/jsr352-tck-impl-SE-suite.xml</source>
             <outputDirectory>/artifacts</outputDirectory>
         </file>
         <file>
-            <source>../com.ibm.jbatch.tck/testng/jsr352-tck-impl-EE-suite.xml</source>
+            <source>../com.ibm.jbatch.tck/src/main/resources/testng/jsr352-tck-impl-EE-suite.xml</source>
             <outputDirectory>/artifacts</outputDirectory>
         </file>
         <file>
