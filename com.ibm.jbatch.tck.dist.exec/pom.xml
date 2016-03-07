@@ -33,6 +33,19 @@
                                     <groupId>com.ibm.jbatch.tck</groupId>
                                     <artifactId>com.ibm.jbatch.tck.dist</artifactId>
                                     <classifier>tck.dist</classifier>
+                                    <!--  
+                                         This entire project/module is designed to run against the official TCK so it's a bit harder to tweak in Maven, and this is by design.
+
+                                         Still, a hack to run against a subset of tests:
+                                         1) Do a full 'mvn install'
+                                         2) WITHOUT doing a clean, edit
+                                             com.ibm.jbatch.tck.dist.exec/target/executeTCK/com.ibm.jbatch.tck-1.1-SNAPSHOT/artifacts/jsr352-tck-impl-SE-suite.xml
+                                            defining the individual test or subset
+                                         3)  Replace 
+                                    <overWrite>true</overWrite>
+                                           below with:
+                                    <overWrite>false</overWrite>
+-->
                                     <overWrite>true</overWrite>
                                     <type>zip</type>
                                     <outputDirectory>${project.build.directory}/executeTCK</outputDirectory>
@@ -131,10 +144,23 @@
                             <skip>${skipTests}</skip>
                             <target>
                                 <ant dir="target${fs}executeTCK${fs}com.ibm.jbatch.tck-${batch.tck.version}" target="run"/>
+                            </target>
+                        </configuration>
+                     </execution>
+                     <execution>
+                        <id>tckSignatureTest</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <skip>${skipSigTests}</skip>
+                            <target>
                                 <ant dir="target${fs}executeTCK${fs}com.ibm.jbatch.tck-${batch.tck.version}" antfile="sigtest.build.xml" target="runSigTest"/>
                             </target>
                         </configuration>
                      </execution>
+ 
                 </executions>
             </plugin>
         </plugins>
