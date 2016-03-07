@@ -290,7 +290,7 @@ public class JobOperatorTests {
 	@org.junit.Test
 	public void testJobOperatorAbandonJobDuringARestart() throws Exception {
 
-		String METHOD = "testJobOperatorRestartAlreadyCompleteException";
+		String METHOD = "testJobOperatorAbandonJobDuringARestart";
 		begin(METHOD);
 		
 		String DEFAULT_SLEEP_TIME = "5000";

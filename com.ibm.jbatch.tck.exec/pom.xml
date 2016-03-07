@@ -135,6 +135,10 @@
                             <suiteXmlFiles>
                                 <!-- Not sure how to reference the suite XML file within the dependency artifact, so rely on an unpacking first.-->
                                 <suiteXmlFile>${project.build.directory}/test-classes/testng/jsr352-tck-impl-SE-suite.xml</suiteXmlFile>
+                                <!-- For debugging -->
+                                <!--
+                                <suiteXmlFile>${project.basedir}/testng.suite.xml</suiteXmlFile>
+-->
                             </suiteXmlFiles>
                             <systemPropertiesFile>${project.basedir}/test.properties</systemPropertiesFile>
                         </configuration>
