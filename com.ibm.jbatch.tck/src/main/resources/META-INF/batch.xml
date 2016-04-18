@@ -22,6 +22,11 @@
     <ref id="PCPCollector" class="com.ibm.jbatch.tck.artifacts.inner.ParallelContextPropagationArtifacts$PCPCollector" />
     <ref id="PCPPartitionBatchlet" class="com.ibm.jbatch.tck.artifacts.inner.ParallelContextPropagationArtifacts$PCPPartitionBatchlet" />
     <ref id="PCPSplitFlowBatchlet" class="com.ibm.jbatch.tck.artifacts.inner.ParallelContextPropagationArtifacts$PCPSplitFlowBatchlet" />
+    <ref id="PartitionRerunArtifacts.A" class="com.ibm.jbatch.tck.artifacts.inner.PartitionRerunArtifacts$Analyzer" />
+    <ref id="PartitionRerunArtifacts.B" class="com.ibm.jbatch.tck.artifacts.inner.PartitionRerunArtifacts$Batchlet" />
+    <ref id="PartitionRerunArtifacts.C" class="com.ibm.jbatch.tck.artifacts.inner.PartitionRerunArtifacts$Collector" />
+    <ref id="PartitionRerunArtifacts.R" class="com.ibm.jbatch.tck.artifacts.inner.PartitionRerunArtifacts$Reader" />
+    <ref id="PartitionRerunArtifacts.W" class="com.ibm.jbatch.tck.artifacts.inner.PartitionRerunArtifacts$Writer" />
     <ref id="countInvocationsObjectParameterizationStepListener" class="com.ibm.jbatch.tck.artifacts.reusable.CountInvocationsObjectParameterizationStepListener" />
     <ref id="countInvocationsStepListener" class="com.ibm.jbatch.tck.artifacts.reusable.CountInvocationsStepListener" />
     <ref id="myBatchletImpl" class="com.ibm.jbatch.tck.artifacts.reusable.MyBatchletImpl" />
