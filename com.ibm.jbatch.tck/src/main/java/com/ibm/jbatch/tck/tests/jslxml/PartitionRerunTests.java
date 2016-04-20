@@ -94,7 +94,6 @@ public class PartitionRerunTests {
 			issueRef="https://java.net/bugzilla/show_bug.cgi?id=6494",
 			note={
 					"Note the spec doesn't explicitly describe this combination of partitions plus allow-start-if-complete=\"true\", but it seems the only valid interpretation.",
-					"TODO - Update spec and reference new entry at that point."
 			},			
 			tckVersionUpdated="1.1.WORKING")
 	@Test
