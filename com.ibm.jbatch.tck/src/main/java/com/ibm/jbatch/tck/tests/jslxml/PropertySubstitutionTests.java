@@ -17,6 +17,7 @@
 package com.ibm.jbatch.tck.tests.jslxml;
 
 import static com.ibm.jbatch.tck.utils.AssertionUtils.assertObjEquals;
+import static com.ibm.jbatch.tck.utils.AssertionUtils.assertWithMessage;
 
 import java.io.File;
 import java.util.Properties;
@@ -259,6 +260,39 @@ public class PropertySubstitutionTests {
 			String result = System.getProperty("property.junit.result");
 			Reporter.log("Test result: " + result + "<p>");
 			assertObjEquals("batchletPropValue", result);
+		} catch (Exception e) {
+			handleException(METHOD, e);
+		}
+	}
+	
+	/*
+	 * @testName: testParentPropertyOutOfScope
+	 * 
+	 * @assertion: For a given artifact, the only properties that are injectable via @BatchProperty 
+	 * are those which are defined at the level of the artifact itself (JSR 352 9.3.2)
+	 * 
+	 * @test_Strategy: Issue a job with a job level property and NO batchlet level property of the 
+	 * same name. Verify that the job level property is NOT injected.
+	 */
+	@Test
+	@org.junit.Test
+	public void testParentPropertyOutOfScope() throws Exception {
+
+		String METHOD = "testParentPropertyOutOfScope";
+
+		try {
+			Reporter.log("Locate job XML file: job_properties2.xml<p>");
+
+			Reporter.log("Set system property:property.junit.propName=parentProp<p>");
+			System.setProperty("property.junit.propName", "parentProp");
+
+			Reporter.log("Invoke startJobAndWaitForResult<p>");
+			JobExecution jobExec = jobOp.startJobAndWaitForResult("job_properties2");
+
+			String wrongResult = "SHOULD_BE_OUT_OF_SCOPE_OF_@INJECT_@BATCHLETPROPERTY";
+			String result = System.getProperty("property.junit.result");
+			Reporter.log("Test result: " + result + "<p>");
+			assertWithMessage("The parent property should be out of scope!", !wrongResult.equals(result));
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
