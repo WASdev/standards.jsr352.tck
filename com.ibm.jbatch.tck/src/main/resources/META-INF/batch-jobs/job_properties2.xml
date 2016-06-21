@@ -20,6 +20,7 @@
 		<property name="myprop1" value="step2" />
 		<property name="myprop2" value="#{jobProperties['myprop1']}" />
 		<property name="batchletProp" value="JOB_OVERRIDE" />
+		<property name="parentProp" value="SHOULD_BE_OUT_OF_SCOPE_OF_@INJECT_@BATCHLETPROPERTY" />
 	</properties>
 	<step id="step1" next="#{jobProperties['myprop1']}">
 	    <properties>
