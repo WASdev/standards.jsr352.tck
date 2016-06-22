@@ -19,7 +19,12 @@
 	<step id="step1">
 		<listeners>
         	<listener ref="mySkipReadListener"/>
-        	<listener ref="mySkipWriteListener"/>
+        	<listener ref="verifySkipWriteListener">
+        		<properties>
+        			<property name="test.itemcount" value="2" />
+        			<!--Property is the number of items in a chunk, which is set to 2 on line 30 -->
+        		</properties>
+        	</listener>
         	<listener ref="mySkipProcessListener"/>
     	</listeners>
 		<chunk item-count="2"

@@ -95,6 +95,7 @@
     <ref id="mySkipReaderExceedListener" class="com.ibm.jbatch.tck.artifacts.specialized.MySkipReaderExceedListener" />
     <ref id="mySkipReadListener" class="com.ibm.jbatch.tck.artifacts.specialized.MySkipReadListener" />
     <ref id="mySkipWriteListener" class="com.ibm.jbatch.tck.artifacts.specialized.MySkipWriteListener" />
+    <ref id="verifySkipWriteListener" class="com.ibm.jbatch.tck.artifacts.specialized.VerifySkipWriteListener" />
     <ref id="myTimeCheckpointListener" class="com.ibm.jbatch.tck.artifacts.specialized.MyTimeCheckpointListener" />
     <ref id="myUniversalListener" class="com.ibm.jbatch.tck.artifacts.specialized.MyUniversalListener" />
     <ref id="nullChkPtInfoReader" class="com.ibm.jbatch.tck.artifacts.specialized.NullChkPtInfoReader" />

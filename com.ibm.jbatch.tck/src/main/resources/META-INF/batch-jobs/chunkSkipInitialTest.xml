@@ -21,7 +21,12 @@
         	<listener ref="myCustomCheckpointListener"/>
         	<listener ref="mySkipReadListener"/>
         	<listener ref="mySkipProcessListener"/>
-        	<listener ref="mySkipWriteListener"/>
+        	<listener ref="verifySkipWriteListener">
+        		 <properties>
+        			<property name="test.itemcount" value="3" />
+        			<!--Property is the number of items in a chunk, which is set to 3 on line 32 -->
+        		</properties>
+          	</listener>
     	</listeners>
 		<chunk item-count="3"
 		 skip-limit="1000">
