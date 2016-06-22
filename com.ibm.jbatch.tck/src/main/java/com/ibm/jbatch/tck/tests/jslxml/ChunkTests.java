@@ -35,6 +35,7 @@ import com.ibm.jbatch.tck.artifacts.specialized.MyMultipleExceptionsRetryReadLis
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipProcessListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipReadListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipWriteListener;
+import com.ibm.jbatch.tck.artifacts.specialized.VerifySkipWriteListener;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 import com.ibm.jbatch.tck.utils.TCKJobExecutionWrapper;
 
@@ -1006,7 +1007,7 @@ public class ChunkTests {
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
-            assertWithMessage("Testing execution #1", MySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
+            assertWithMessage("Testing execution #1", VerifySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
         } catch (Exception e) {
             handleException(METHOD, e);
         }
@@ -1306,7 +1307,7 @@ public class ChunkTests {
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
-            assertWithMessage("Testing execution #1", MySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
+            assertWithMessage("Testing execution #1", VerifySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
         } catch (Exception e) {
             handleException(METHOD, e);
         }
