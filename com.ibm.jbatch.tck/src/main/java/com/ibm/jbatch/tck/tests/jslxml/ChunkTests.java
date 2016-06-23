@@ -35,6 +35,7 @@ import com.ibm.jbatch.tck.artifacts.specialized.MyMultipleExceptionsRetryReadLis
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipProcessListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipReadListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipWriteListener;
+import com.ibm.jbatch.tck.artifacts.specialized.VerifySkipWriteListener;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 import com.ibm.jbatch.tck.utils.TCKJobExecutionWrapper;
 
@@ -1313,6 +1314,49 @@ public class ChunkTests {
 
     }
 
+    /*
+     * @testName: testChunkSkipWriteVerify
+     * @assertion: job will finish successfully as COMPLETED and skippable exceptions will be recognized 
+     *             5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
+     *             5.2.1.2 - Processor
+     *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
+     *             5.2.1 - Chunk, item-count, skip-limit
+     *             5.2.1.4 - Exception Handling - skippable-exception-classes
+     * 
+     * @test_Strategy: start a job with item-count specified. Set the writer to throw a skippable exception at predetermined location
+     * 					so that a skipWriteListener is called. The Listener will verify that the number of objects is equal to the
+     * 					the specified item-count, and that none of those objects are null.
+     */
+    @Test
+    @org.junit.Test
+    public void testChunkSkipWriteVerify() throws Exception {
+    	String METHOD = "testChunkSkipWriteVerify";
+        try {
+            Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            Reporter.log("execution.number=1<p>");
+            Reporter.log("writerecord.fail=1,3<p>");
+            Reporter.log("app.arraysize=30<p>");
+            jobParams.put("execution.number", "1");
+            jobParams.put("writerecord.fail", "1,3");
+            jobParams.put("app.arraysize", "30");
+
+            Reporter.log("Locate job XML file: chunkSkipVerifyTest.xml<p>");
+
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkSkipVerifyTest", jobParams);
+
+            Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
+            Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
+            assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
+            assertWithMessage("Testing execution #1", VerifySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
+        } catch (Exception e) {
+            handleException(METHOD, e);
+        }
+
+    }
+
+    
     /*
      * @testName: testChunkSkipReadNoSkipChildEx
      * @assertion: job will finish as FAILED and excluded skippable exceptions will be recognized 
