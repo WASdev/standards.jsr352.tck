@@ -3,7 +3,7 @@ language: java
 install: 
  - git clone https://github.com/WASdev/standards.jsr352.jbatch
  - cd standards.jsr352.jbatch
- - mvn clean install
+ - mvn clean install -Dmaven.test.skip=true
  - cd ..
  - rm -rf standards.jsr352.jbatch
 script: mvn test-compile
