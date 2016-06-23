@@ -6,7 +6,7 @@ install:
  - mvn clean install
  - cd ..
  - rm -rf standards.jsr352.jbatch
-script: mvn  install
+script: mvn test-compile
 
 branches:
   only:
