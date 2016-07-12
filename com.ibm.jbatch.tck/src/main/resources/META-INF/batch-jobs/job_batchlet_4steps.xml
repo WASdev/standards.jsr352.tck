@@ -24,6 +24,7 @@
 	</step>
 	<step id="step3">
 		<batchlet ref="myBatchletImpl" />
+		<end on="VERY GOOD INVOCATION" exit-status="STEP 3 COMPLETED"/>
 	</step>	
 	<step id="step4" next="step3">
 		<batchlet ref="myBatchletImpl" />
