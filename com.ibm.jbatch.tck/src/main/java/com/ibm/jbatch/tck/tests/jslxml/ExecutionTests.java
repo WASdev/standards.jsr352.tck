@@ -84,7 +84,7 @@ public class ExecutionTests {
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
 			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
-			assertObjEquals("Completed", jobExec.getExitStatus());
+			assertObjEquals("STEP 1 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -110,7 +110,7 @@ public class ExecutionTests {
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
 			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
-			assertObjEquals("Completed", jobExec.getExitStatus());
+			assertObjEquals("STEP 2 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -269,7 +269,7 @@ public class ExecutionTests {
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
 			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
-			assertObjEquals("Completed", jobExec.getExitStatus());
+			assertObjEquals("STEP 2 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
