@@ -25,6 +25,6 @@
 		 <processor ref="doSomethingItemProcessorImpl"/>
 		 <writer ref="doSomethingItemWriterImpl"></writer>
 		 </chunk> 	
-		 <end on="COMPLETED" exit-status="Completed"/>
+		 <end on="COMPLETED" exit-status="STEP 2 COMPLETED"/>
 	</step>
 </job>
