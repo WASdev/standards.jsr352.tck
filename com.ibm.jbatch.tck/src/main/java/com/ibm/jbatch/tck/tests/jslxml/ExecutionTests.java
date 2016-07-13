@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 International Business Machines Corp.
+ * Copyright 2016 International Business Machines Corp.
  * 
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership. Licensed under the Apache License, 
@@ -155,6 +155,43 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+		} catch (Exception e) {
+			handleException(METHOD, e);
+		}
+	}
+	
+	/*
+	 * @testName: testJobWithNoMatchingTransitionElement
+	 * @assertion: job will finish successfully with an exit status set to "nullUnusedExitStatusForPartitions"
+	 * @test_Strategy: The job is written with all transitions elements in the first step. None will match the return value of the step.
+	 * 					With no clear next step, the job should finish on step 1. The test ensures that step 2 is not run.
+	 */
+	
+	@TCKTest(
+			specRefs={
+					@SpecRef(section="8.6",version="1.0", notes={"See Javadoc"}),
+			},
+			apiRefs={
+					@APIRef(className="com.ibm.jbatch.container.jsl.TransitionElement.java")
+			},
+			versions="1.1.WORKING",
+			assertions={"Step 2 does not execute"})
+	@Test
+	@org.junit.Test  
+	public void testJobWithNoMatchingTransitionElement() throws Exception {
+		String METHOD = "testJobWithNoMatchingTransitionElement";
+		begin(METHOD);
+
+		try {
+			Reporter.log("Locate job XML file: job_batchlet_no_matching_element.xml<p>");
+
+			Reporter.log("Invoking startJobAndWaitForResult for Execution #1<p>");
+			JobExecution jobExec = jobOp.startJobAndWaitForResult("job_batchlet_no_matching_element");
+
+			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
+			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("nullUnusedExitStatusForPartitions", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
