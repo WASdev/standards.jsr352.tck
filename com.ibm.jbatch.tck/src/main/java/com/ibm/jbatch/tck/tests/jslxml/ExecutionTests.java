@@ -159,6 +159,33 @@ public class ExecutionTests {
 			handleException(METHOD, e);
 		}
 	}
+	
+	/*
+	 * @testName: testJobWithNoMatchingTransitionElement
+	 * @assertion: job will finish successfully with an exit status set to "nullUnusedExitStatusForPortitions"
+	 * @test_Strategy: The job is written with all transitions elements in the first step. None will match the return value of the step.
+	 * 					With no clear next step, the job should finish on step 1. The test ensures that step 2 is not run.
+	 */
+	@Test
+	@org.junit.Test  
+	public void testJobWithNoMatchingTransitionElement() throws Exception {
+		String METHOD = "testJobWithNoMatchingTransitionElement";
+		begin(METHOD);
+
+		try {
+			Reporter.log("Locate job XML file: job_batchlet_no_matching_element.xml<p>");
+
+			Reporter.log("Invoking startJobAndWaitForResult for Execution #1<p>");
+			JobExecution jobExec = jobOp.startJobAndWaitForResult("job_batchlet_no_matching_element");
+
+			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
+			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("nullUnusedExitStatusForPartitions", jobExec.getExitStatus());
+		} catch (Exception e) {
+			handleException(METHOD, e);
+		}
+	}
 
 	/*
 	 * @testName: testInvokeJobWithFailElement
