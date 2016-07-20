@@ -267,21 +267,19 @@ public class PropertySubstitutionTests {
 		}
 	}
 	
-	/*
-	 * @testName: testParentPropertyOutOfScope
-	 * 
-	 * @assertion: For a given artifact, the only properties that are injectable via @BatchProperty 
-	 * are those which are defined at the level of the artifact itself (JSR 352 9.3.2)
-	 * 
-	 * @test_Strategy: Issue a job with a job level property and NO batchlet level property of the 
-	 * same name. Verify that the job level property is NOT injected.
-	 */
 	@TCKTest(
-			specRef={
-					@SpecRef(section={"9.3.2"},version="1.0RevA"),
-			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5746",	
-			tckVersionUpdated="1.1.WORKING")
+		versions={"1.1.WORKING"},
+		assertions={"Job level properties cannot be injected into a step level batch artifact via @BatchProperty."},
+		specRefs={
+			@SpecRef(
+				version="1.0RevA", section="9.3.2",
+				citations={"For a given artifact, the only properties that are injectable via @BatchProperty are those which are defined at the level of the artifact itself"}
+			),
+		},
+		issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5746"},
+		strategy="Issue a job with a job level property and NO batchlet level property of the same name. "
+				+ "Verify that the job level property is NOT injected."
+	)
 	@Test
 	@org.junit.Test
 	public void testParentPropertyOutOfScope() throws Exception {

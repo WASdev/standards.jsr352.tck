@@ -22,18 +22,45 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD,ElementType.TYPE})
+/**
+ * The TCKTest annotation is used to generate a report of the TCK coverage.
+ * <br><br>
+ * <span style='font-weight:bold;'> Required Attributes: </span> versions, assertions, specRefs
+ * <br>
+ * Optional Attributes: apiRefs, issueRefs, strategy, notes
+ */
+@Target(ElementType.METHOD)
 @Documented  
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TCKTest {
 	
-	SpecRef[] specRef() default {};
-	APIRef[] apiRef() default {};
-	String[] tckVersionUpdated();
-
-	/** 
-	 * URL(s) referencing bug(s) the test was added for.
+	/**
+	 * The versions of the TCK that the test was updated for.
+	 * <br><br>
+	 * <span style='font-weight:bold;'> versions[0] should contain the first version of the TCK that included this test. </span>
+	 * <br><br>
+	 * List of valid values:
+	 * <ul>
+	 *   <li>1.0</li>
+	 * </ul>
 	 */
-	String[] issueRef() default "";  
-	String[] note() default {};	
+	String[] versions();
+	
+	/** The behaviors being tested */
+	String[] assertions();
+	
+	/** References to the JSR 352 sections that specify the behavior being tested */
+	SpecRef[] specRefs();
+	
+	/** References to the JSR 352 APIs being tested */
+	APIRef[] apiRefs() default {};
+	
+	/** URLs referencing bugs the test was added for */
+	String[] issueRefs() default {};
+	
+	/** The strategy used to test the assertions */
+	String strategy() default "";
+	
+	/** Other comments about the TCKTest */
+	String[] notes() default {};	
 }
