@@ -24,8 +24,7 @@ import java.util.Properties;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.StepExecution;
 
-import com.ibm.jbatch.tck.annotations.APIRef;
-import com.ibm.jbatch.tck.annotations.TCKTest;
+import com.ibm.jbatch.tck.annotations.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 import org.junit.Before;
@@ -39,36 +38,27 @@ public class ParallelContextPropagationTests {
 
 	private static JobOperatorBridge jobOp = null;
 
-	/**
-	 * @testName: testPartitionContextPropagation
-	 * 
-	 * @assertion: Ensures that the correct values of JobContext and StepContext data (ids and other) can be accessed from an artifact running in a partition
-	 * 
-	 * 		JobContext#getProperties()
-	 *		JobContext#getJobName();
-	 *		JobContext#getExecutionId();
-	 *		JobContext#getInstanceId();
-	 *		StepContext#getStepExecutionId();
-	 *      StepContext#getProperties()
-	 *
-	 * @test_Strategy: Certain values like job name and job and step properties are checked against hard-coded values within the executing batchlet.
-	 * The execution and instance ids obtained from the contexts are passed to the analyzer from a collector where they are aggregated into the job exit status 
-	 * in a special format, and finally these are parsed out and checked against the corresponding values obtained from the JobExecution and StepExecutions.
-	 */ 
 	@TCKTest(
-			apiRef={
-					@APIRef(className="javax.batch.runtime.context.JobContext"),
-					@APIRef(className="javax.batch.runtime.context.StepContext")
-			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5164",
-			note="There is no particular place in the spec that says that partitions and split " +
-					"flows share the same values for the getters tested as the top-level JobContext/StepContext.",
-			tckVersionUpdated="1.1.WORKING")
+		versions={"1.1.WORKING"},
+		assertions={"The values of JobContext and StepContext can be accessed from an artifact running in a partition."},
+		specRefs={
+			@SpecRef(version="1.0", section="10.9.1", notes={"API for JobContext"}),
+			@SpecRef(version="1.0", section="10.9.2", notes={"API for StepContext"}),
+		},
+		apiRefs={
+			@APIRef(className="javax.batch.runtime.context.JobContext", methodNames={"getProperties","getJobName","getExecutionId","getInstanceId"}),
+			@APIRef(className="javax.batch.runtime.context.StepContext", methodNames={"getStepExecutionId","getProperties"}),
+		},
+		issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5164"},
+		strategy= "First, certain JobContext and StepContext values (properties, names, ids, etc.) are checked against hard-coded values "
+				+ "within the executing batchlet. Then, a PartitionCollector formats some of the values into a String, which is passed to "
+				+ "a PartitionAnalyzer. The PartitionAnalyzer sets the job exit status to this formatted String. Finally, we check that the "
+				+ "values obtained by parsing the job exit status correspond with the values obtained from the JobExecution and StepExecution.",
+		notes={"There is no particular place in the spec that says that partitions share the same values for the getters tested as the top-level JobContext/StepContext."}
+	)
 	@Test
 	@org.junit.Test
 	public void testPartitionContextPropagation() throws Exception {
-
-		String METHOD = "testPartitionContextPropagation";
 
 		JobExecution je = jobOp.startJobAndWaitForResult("partitionCtxPropagation", null);
 
@@ -111,35 +101,27 @@ public class ParallelContextPropagationTests {
 	}
 
 
-    /**
-	 * @testName: testSplitFlowContextPropagation
-	 * 
-	 * @assertion: Ensures that the correct values of JobContext and StepContext data (ids and other) can be accessed from an artifact running in a split-flow. 
-	 * 
-	 * 		JobContext#getProperties()
-	 *		JobContext#getJobName();
-	 *		JobContext#getExecutionId();
-	 *		JobContext#getInstanceId();
-	 *		StepContext#getStepExecutionId();
-	 *
-	 * @test_Strategy: Certain values like job name and properties are checked against hard-coded values within the executing batchlet.
-	 * The execution and instance ids obtained from the contexts are set within the step exit status in a special format, and finally these are parsed out 
-	 * and checked against the corresponding values obtained from the JobExecution and StepExecutions. 
-	 */
 	@TCKTest(
-			apiRef={
-					@APIRef(className="javax.batch.runtime.context.JobContext"),
-					@APIRef(className="javax.batch.runtime.context.StepContext")
+			versions={"1.1.WORKING"},
+			assertions={"The values of JobContext and StepContext can be accessed from an artifact running in a split-flow."},
+			specRefs={
+				@SpecRef(version="1.0", section="10.9.1", notes={"API for JobContext"}),
+				@SpecRef(version="1.0", section="10.9.2", notes={"API for StepContext"}),
 			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5164",
-			note="There is no particular place in the spec that says that partitions and split " +
-					"flows share the same values for the getters tested as the top-level JobContext/StepContext.",
-			tckVersionUpdated="1.1.WORKING")
+			apiRefs={
+				@APIRef(className="javax.batch.runtime.context.JobContext", methodNames={"getProperties","getJobName","getExecutionId","getInstanceId"}),
+				@APIRef(className="javax.batch.runtime.context.StepContext", methodNames={"getStepExecutionId"}),
+			},
+			issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5164"},
+			strategy= "First, certain JobContext and StepContext values (properties, names, ids, etc.) are checked against hard-coded values "
+					+ "within the executing batchlet. Then, each step within the split-flow (they all use the same batchlet) sets its exit "
+					+ "status to a formatted String of these values. Finally, we check that the values obtained by parsing the exit statuses "
+					+ "of the steps correspond with the values obtained from the JobExecution and StepExecutions.",
+			notes={"There is no particular place in the spec that says that split-flows share the same values for the getters tested as the top-level JobContext/StepContext."}
+		)
 	@Test
 	@org.junit.Test
 	public void testSplitFlowContextPropagation() throws Exception {
-
-		String METHOD = "testSplitFlowContextPropagation";
 
 		JobExecution je = jobOp.startJobAndWaitForResult("splitFlowCtxPropagation", null);
 
