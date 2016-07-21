@@ -110,6 +110,7 @@
         <batch.api.version>1.1-SNAPSHOT</batch.api.version>
         <batch.impl.version>1.1-SNAPSHOT</batch.impl.version>
         <batch.tck.version>1.1-SNAPSHOT</batch.tck.version>
+        <batch.tck.ann.version>1.1-SNAPSHOT</batch.tck.ann.version>
         <batch.spec.version>1.1</batch.spec.version>
         <non.final>false</non.final>
 
@@ -160,6 +161,7 @@
         <module>com.ibm.jbatch.tck.exec</module>
         <module>com.ibm.jbatch.tck.dist</module>
         <module>com.ibm.jbatch.tck.dist.exec</module>
+        <module>com.ibm.jbatch.tck.ann</module>
     </modules>
 
     <dependencyManagement>
@@ -178,6 +180,11 @@
                 <groupId>com.ibm.jbatch.tck</groupId>
                 <artifactId>com.ibm.jbatch.tck</artifactId>
                 <version>${batch.tck.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm.jbatch.tck</groupId>
+                <artifactId>com.ibm.jbatch.tck.ann</artifactId>
+                <version>${batch.tck.ann.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibm.jbatch.tck</groupId>
