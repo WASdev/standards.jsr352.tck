@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.jbatch.tck.annotations;
+package com.ibm.jbatch.tck.ann;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,18 +22,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD,ElementType.TYPE})
+/**
+ * Reference to a JSR 352 API that specifies a particular behavior.
+ * <br><br>
+ * <span style='font-weight: bold;'> Required Attributes </span>
+ * <br>
+ * Optional Attributes: className, methodName, note
+ */
+@Target({ElementType.METHOD}) 
 @Documented  
-@Retention(RetentionPolicy.RUNTIME)
-public @interface TCKTest {
+@Retention(RetentionPolicy.RUNTIME) 
+public @interface APIRef {
 	
-	SpecRef[] specRef() default {};
-	APIRef[] apiRef() default {};
-	String[] tckVersionUpdated();
-
-	/** 
-	 * URL(s) referencing bug(s) the test was added for.
-	 */
-	String[] issueRef() default "";  
-	String[] note() default {};	
+	/** Name of the class where the behavior is specified */
+	String className() default "";
+	
+	/** Names of the methods where the behavior is specified */
+	String[] methodNames() default {};
+	
+	/** Other comments about the APIRef */
+	String[] notes() default {};
 }
