@@ -83,6 +83,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("STEP 1 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -107,6 +109,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("STEP 2 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -131,6 +135,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("STEP 3 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -138,8 +144,9 @@ public class ExecutionTests {
 
 	/*
 	 * @testName: testInvokeJobWithNextElement
-	 * @assertion: FIXME
-	 * @test_Strategy: FIXME
+	 * @assertion: job will finish successfully as COMPLETED
+	 * @test_Strategy: The job is written with a Next Element to control a step transition. The status of the second step is checked
+	 * 		for completion, to prove that the step was properly called from the Next Element.
 	 */
 	@Test
 	@org.junit.Test  
@@ -155,6 +162,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("STEP 2 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -215,8 +224,9 @@ public class ExecutionTests {
 
 	/*
 	 * @testName: testInvokeJobWithStopElement
-	 * @assertion: FIXME
-	 * @test_Strategy: FIXME
+	 * @assertion: job will finish successfully as STOPPED after the first step
+	 * @test_Strategy: A Stop Element is used to terminate the job after the first step. If the job continues, a different status is returned,
+	 * 	and the test fails.
 	 */
 	@Test
 	@org.junit.Test  
@@ -232,6 +242,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.STOPPED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("TEST_STOPPED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
@@ -265,8 +277,9 @@ public class ExecutionTests {
 
 	/*
 	 * @testName: testInvokeJobSimpleChunk
-	 * @assertion: FIXME
-	 * @test_Strategy: FIXME
+	 * @assertion: job will finish successfully as COMPLETED
+	 * @test_Strategy: A small chunk is run with a reader, processor, and writer. If all items are read, processed, and written
+	 * 	without failure, then the exit status will be good and the test will pass.
 	 */
 	@Test
 	@org.junit.Test
@@ -282,6 +295,8 @@ public class ExecutionTests {
 
 			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
+			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
+			assertObjEquals("STEP 2 COMPLETED", jobExec.getExitStatus());
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}

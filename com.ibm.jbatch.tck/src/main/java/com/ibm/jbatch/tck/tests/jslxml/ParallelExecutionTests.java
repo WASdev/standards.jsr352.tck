@@ -442,11 +442,14 @@ public class ParallelExecutionTests {
 	/*
      * @testName: testPartitionedMapperOverrideFalseOnRestart
      * 
-     * @assertion: Section 8.7. Partitioned artifact and Chunk processing order.
-     * Partition mapper can generate a plan that will determine partition
-     * instances and properties.
+     * @assertion: Section 8.2.6 and 8.7. A failed partition step should cause the whole job to fail.
+     * When PartitionsOverride is false, a restarted job should use the same number of partitions as
+     * on the previous execution.
      * 
-     * @test_Strategy: 
+     * @test_Strategy: Issue a job batchlet step with 3 partitions where partition 0 fails on first
+     * execution. Partitions 1 and 2 complete successfully. When the job is restarted, the batchlet
+     * should use the same number of partitions as the previous execution, and it should only restart
+     * the failed partition.
      */
     @Test
     @org.junit.Test
@@ -493,14 +496,18 @@ public class ParallelExecutionTests {
     /*
      * @testName: testPartitionedMapperOverrideTrueDiffPartitionNumOnRestart
      * 
-     * @assertion: 
+     * @assertion: 10.8.5.2 When partitionsOverride = True, all partition execution data from
+     * the previous execution are discarded.
      * 
-     * @test_Strategy: 
+     * @test_Strategy: Issue a job batchlet step with 2 partitions where partition 0 fails.
+     * Partition 1 completes successfully. When the job is restarted, partitionsOverride is
+     * set to true, so previous execution data are discarded, and a new number of partitions is
+     * used.
      */
     @Test
     @org.junit.Test
     public void testPartitionedMapperOverrideTrueDiffPartitionNumOnRestart() throws Exception {
-        String METHOD = "testPartitionedMapperOverrideFalse";
+        String METHOD = "testPartitionedMapperOverrideTrueDiffPartitionNumOnRestart";
         begin(METHOD);
 
         try {
@@ -508,7 +515,7 @@ public class ParallelExecutionTests {
 
             Reporter.log("Create Job parameters for Execution #1<p>");
             Properties jobParams = new Properties();
-            Reporter.log("numPartitionsProp=3<p>");
+            Reporter.log("numPartitionsProp=2<p>");
             Reporter.log("failThisPartition=0<p>");
             //append "CA" to expected exit status for each partition
             jobParams.setProperty("numPartitionsProp" , "2"); 
@@ -541,14 +548,19 @@ public class ParallelExecutionTests {
     /*
      * @testName: testPartitionedMapperOverrideTrueSamePartitionNumOnRestart
      * 
-     * @assertion: 
+     * @assertion: 10.8.5.2 When partitionsOverride = True, all partition execution data from
+     * the previous execution are discarded.
      * 
-     * @test_Strategy: 
+     * @test_Strategy: Issue a job batchlet step with 3 partitions where partition 0 fails.
+     * Partitions 1 and 2 complete successfully. When the job is restarted, partitionsOverride is
+     * set to true, so previous execution data are discarded. This means that even though the
+     * number of partitions specified for execution #2 is the same as in the first execution, all
+     * partitions should be restarted anyway, even though some had completed previously.
      */
     @Test
     @org.junit.Test
     public void testPartitionedMapperOverrideTrueSamePartitionNumOnRestart() throws Exception {
-        String METHOD = "testPartitionedMapperOverrideFalse";
+        String METHOD = "testPartitionedMapperOverrideTrueSamePartitionNumOnRestart";
         begin(METHOD);
 
         try {

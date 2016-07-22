@@ -17,12 +17,15 @@
 package com.ibm.jbatch.tck.tests.jslxml;
 
 import static com.ibm.jbatch.tck.utils.AssertionUtils.assertObjEquals;
+import static com.ibm.jbatch.tck.utils.AssertionUtils.assertWithMessage;
 
 import java.io.File;
 import java.util.Properties;
 
+import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 
+import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 import org.junit.BeforeClass;
@@ -259,6 +262,52 @@ public class PropertySubstitutionTests {
 			String result = System.getProperty("property.junit.result");
 			Reporter.log("Test result: " + result + "<p>");
 			assertObjEquals("batchletPropValue", result);
+		} catch (Exception e) {
+			handleException(METHOD, e);
+		}
+	}
+	
+	@TCKTest(
+		versions={"1.1.WORKING"},
+		assertions={"Job level properties cannot be injected into a step level batch artifact via @BatchProperty."},
+		specRefs={
+			@SpecRef(
+				version="1.0RevA", section="9.3.2",
+				citations={"For a given artifact, the only properties that are injectable via @BatchProperty are those which are defined at the level of the artifact itself"}
+			),
+		},
+		issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5746"},
+		strategy="Issue a job with a job level property and NO batchlet level property of the same name. "
+				+ "Verify that the job level property is NOT injected."
+	)
+	@Test
+	@org.junit.Test
+	public void testParentPropertyOutOfScope() throws Exception {
+
+		String METHOD = "testParentPropertyOutOfScope";
+
+		try {
+			Reporter.log("Locate job XML file: job_properties2.xml<p>");
+
+			Reporter.log("Set system property:property.junit.propName=parentProp<p>");
+			System.setProperty("property.junit.propName", "parentProp");
+
+			Reporter.log("Invoke startJobAndWaitForResult<p>");
+			JobExecution jobExec = jobOp.startJobAndWaitForResult("job_properties2");
+
+			String wrongResult = "SHOULD_BE_OUT_OF_SCOPE_OF_@INJECT_@BATCHLETPROPERTY";
+			String result = System.getProperty("property.junit.result");
+			Reporter.log("Test result: " + result + "<p>");
+			
+			//CDI handles @Injects for properties that do not exist by defaulting to a null value
+			//While this is probably a typical behavior, CDI is not a mandatory injection technique, 
+			//and so we check that the JSL property value is NOT substituted, rather than checking 
+			//for the existence of a specific value of null.
+			assertWithMessage("The parent property should be out of scope!", !wrongResult.equals(result));
+			
+			//To ensure that the test isn't passing because the job failed and the logic in question
+			//was never exercised, we also assert that the job completed 
+			assertWithMessage("The job should complete", jobExec.getBatchStatus(), BatchStatus.COMPLETED);
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}

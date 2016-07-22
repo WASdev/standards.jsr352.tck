@@ -18,5 +18,6 @@
 <job id="job_batchlet_1step" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
 	<step id="step1" >
 		<batchlet ref="myBatchletImpl" />
+		<end on="VERY GOOD INVOCATION" exit-status="STEP 1 COMPLETED"/>
 	</step>
 </job>

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.jbatch.tck.annotations;
+package com.ibm.jbatch.tck.ann;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,12 +22,36 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Reference to a JSR 352 section that specifies a particular behavior.
+ * <br><br>
+ * <span style='font-weight:bold;'> Required Attributes: </span> version, section
+ * <br>
+ * Optional Attributes: citations, notes
+ */
 @Target({ElementType.METHOD}) 
 @Documented  
-@Retention(RetentionPolicy.RUNTIME) 
-public @interface APIRef {
-	String className() default "";    
-	String methodName() default "";   
-	String signature() default "";
-	String[] note() default {};
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SpecRef {
+
+	/** 
+	 * Version of JSR 352 where the behavior was first introduced or most recently clarified
+	 * <br><br>
+	 * List of valid values:
+	 * <ul>
+	 *   <li>1.0</li>
+	 *   <li>1.0RevA</li>
+	 *   <li>1.1</li>
+	 * </ul>
+	 */
+	String version();
+	
+	/** JSR 352 section where the behavior is specified */
+	String section() default "";
+	
+	/** Relevant quotations from the section */
+	String[] citations() default{};
+	
+	/** Other comments about the SpecRef */
+	String[] notes() default {};	
 }
