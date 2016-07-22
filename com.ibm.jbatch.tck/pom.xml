@@ -39,6 +39,16 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.ibm.jbatch.tck</groupId>
+            <artifactId>com.ibm.jbatch.tck.ann</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch.tck</groupId>
+            <artifactId>com.ibm.jbatch.tck.ann.proc</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
         </dependency>
