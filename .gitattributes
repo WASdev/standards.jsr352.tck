@@ -20,6 +20,8 @@
 *.tld           text
 *.txt           text
 *.xml           text
+*.sig           text
+*.sql           text
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
@@ -34,6 +36,7 @@
 *.png           binary
 *.so            binary
 *.war           binary
+*.pdf           binary
 
 ################################################
 # Additional File Types and Suggested Settings #
