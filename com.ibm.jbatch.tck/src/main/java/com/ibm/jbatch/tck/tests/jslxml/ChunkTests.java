@@ -1331,13 +1331,16 @@ public class ChunkTests {
      *                     the specified item-count, and that none of those objects are null.
      */
     @TCKTest(
-            specRef={
-                    @SpecRef(section={"9.2.7"},version="1.0", note="See Javadoc"),
+            specRefs={
+                    @SpecRef(section="9.2.7",version="1.0", notes={"See Javadoc"}),
             },
-            apiRef={
-                    @APIRef(className="javax.batch.api.chunk.listener.SkipWriteListener")
+            apiRefs={
+                    @APIRef(className="")
             },
-            tckVersionUpdated="1.1.WORKING")    
+            assertions={"The number of items in the list passed to the listener is correct",
+            		    "All of the items are non-null",
+            		    "The values of the items match the expected values"},
+            versions="1.1.WORKING")    
     @Test
     @org.junit.Test
     public void testChunkSkipWriteVerify() throws Exception {
