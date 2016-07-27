@@ -235,15 +235,23 @@ public class PropertySubstitutionTests {
 		}
 	}
 
-	/*
-	 * @testName: testPropertyInnerScopePrecedence
-	 * 
-	 * @assertion: A batch artifacts properties overrides any parent properties defined in 
-	 * an outer XML scope. Child properties always override parent properties with the same name.
-	 * 
-	 * @test_Strategy: Issue a job with a step level property and batchlet property with the same name.
-	 * Verify that the injected property value is from the artifact level property.
-	 */
+	@TCKTest(
+		versions={"1.0", "1.1.WORKING"},
+		assertions={"For an artifact level property that is resolved via the jobProperties substitution operator, a "
+				+ "step level property holds precedence over a job level property with the specified target name."},
+		specRefs={
+			@SpecRef(
+				version="1.0", section="8.8.1.2",
+				citations={"The jobProperties substitution operator resolves to the value of the job property with "
+						+ "the specified target name. This property is found by recursively searching from the "
+						+ "innermost containment scope (this includes earlier properties within the current scope) "
+						+ "to the outermost scope until a property with the specified target name is found."}
+			),
+		},
+		strategy="Issue a job with a batchlet level property of #{jobProperties['batchletPropVal']}. The job will have "
+				+ "a job level property and a step level property, both with the name of batchletPropVal. Verify that "
+				+ "the step level property is the one used for substitution."
+	)
 	@Test
 	@org.junit.Test
 	public void testPropertyInnerScopePrecedence() throws Exception {
@@ -257,11 +265,11 @@ public class PropertySubstitutionTests {
 			System.setProperty("property.junit.propName", "batchletProp");
 
 			Reporter.log("Invoke startJobAndWaitForResult<p>");
-			JobExecution jobExec = jobOp.startJobAndWaitForResult("job_properties2");
+			jobOp.startJobAndWaitForResult("job_properties2");
 
 			String result = System.getProperty("property.junit.result");
 			Reporter.log("Test result: " + result + "<p>");
-			assertObjEquals("batchletPropValue", result);
+			assertObjEquals("STEP_OVERRIDE", result);
 		} catch (Exception e) {
 			handleException(METHOD, e);
 		}
