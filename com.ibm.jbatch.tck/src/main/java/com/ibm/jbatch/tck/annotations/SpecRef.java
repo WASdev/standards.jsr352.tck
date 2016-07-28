@@ -22,15 +22,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Reference to a JSR 352 section that specifies a particular behavior.
+ * <br><br>
+ * <span style='font-weight:bold;'> Required Attributes: </span> version, section
+ * <br>
+ * Optional Attributes: citations, notes
+ */
 @Target({ElementType.METHOD}) 
 @Documented  
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SpecRef {
 
 	/** 
-	 * Version of the spec the behavior being tested was first introduced (or possibly first clarified if 
-	 * that's a better way to understand the test intent.
-	 * 
+	 * Version of JSR 352 where the behavior was first introduced or most recently clarified
+	 * <br><br>
 	 * List of valid values:
 	 * <ul>
 	 *   <li>1.0</li>
@@ -38,7 +44,14 @@ public @interface SpecRef {
 	 *   <li>1.1</li>
 	 * </ul>
 	 */
-	String version();	
-	String[] section() default {};
-	String[] note() default {};	
+	String version();
+	
+	/** JSR 352 section where the behavior is specified */
+	String section() default "";
+	
+	/** Relevant quotations from the section */
+	String[] citations() default{};
+	
+	/** Other comments about the SpecRef */
+	String[] notes() default {};	
 }

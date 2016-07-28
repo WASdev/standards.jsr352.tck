@@ -31,8 +31,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.ibm.jbatch.tck.annotations.SpecRef;
-import com.ibm.jbatch.tck.annotations.TCKTest;
+import com.ibm.jbatch.tck.annotations.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 public class PartitionRerunTests {
@@ -71,31 +70,30 @@ public class PartitionRerunTests {
 		jobOp = null;
 	}
 	
-	/*
-	 * @testName: testRerunPartitionAndBatchlet
-	 * 
-	 * @assertion: Tests partition restart in two cases:
-	 * 
-	 *  a) when we fail in a partitioned step with a mix of COMPLETED and FAILED partitions
-	 *  b) when we fail in a subsequent step after having COMPLETED a partitioned step with allow-start-if-complete=true
-	 * 
-	 * In case a) the failing partitions should re-execute on job restart, but only those failing partitions (not the previously-COMPLETED partitions) should execute.
-	 * In case b) all partitions should re-execute, since this amounts to an entirely new execution of the step.
-	 * 
-	 * @test_Strategy: In the first job execution the test fails in one partition and passes in the other two while
-	 * running through step1.  The second execution ensures that the one partition that failed in step1 is the only one to be run 
-	 * again; we complete step1 then and fail in step 2.  In the third execution, since step1 has previously completed
-	 * and allow-start-if-complete="true", we verify that all three partitions in step1 are re-executed.
-	 */
-	@TCKTest(
-			specRef={
-					@SpecRef(section={"10.8.4","8.2"},version="1.0", note="Within Sec. 10.8.4 see sequence #3.c"),
-			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=6494",
-			note={
-					"Note the spec doesn't explicitly describe this combination of partitions plus allow-start-if-complete=\"true\", but it seems the only valid interpretation.",
-			},			
-			tckVersionUpdated="1.1.WORKING")
+    @TCKTest(
+		versions={"1.1.WORKING"},
+		assertions={
+			"Upon job restart, only FAILED partitions of a FAILED partitioned step are re-executed (COMPLETED partitions are not re-executed).",
+			"Upon job restart, all partitions of a COMPLETED partitioned step with allow-start-if-complete=true are re-executed.",
+		},
+		specRefs={
+			@SpecRef(
+				version="1.0", section="8.2",
+				citations={"allow-start-if-complete: Specifies whether this step is allowed to start during job restart, even if the step completed in a previous execution."}
+			),
+			@SpecRef(
+				version="1.0", section="10.8.4",
+				citations={"if the step is a partitioned step, only the partitions that did not complete previously are restarted."},
+				notes={"See 3.c."}
+			),
+		},
+		issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=6494"},
+		strategy= "In the first job execution, the test fails in one partition and passes in the other two while running through step1. "
+				+ "In the second execution, check that only the failed partition in step1 is re-executed; complete step1 and then fail in step2. "
+				+ "In the third execution, since step1 has previously completed and allow-start-if-complete=true, we verify that all three "
+				+ "partitions in step1 are re-executed.",
+		notes={"The spec doesn't explicitly describe this combination of partitions plus allow-start-if-complete=\"true\", but it seems the only valid interpretation."}
+	)
 	@Test
 	@org.junit.Test
 	public void testRerunPartitionAndBatchlet() throws Exception {

@@ -28,8 +28,7 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.ibm.jbatch.tck.annotations.APIRef;
-import com.ibm.jbatch.tck.annotations.TCKTest;
+import com.ibm.jbatch.tck.annotations.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 
@@ -42,23 +41,30 @@ public class ListenerOnErrorTests {
 		jobOp = new JobOperatorBridge();
 	}
 
-    /**
-     * @testName: testOnWriteErrorItems
-     * 
-     * @assertion: Ensure the ItemWriteListener onWriteError is passed the right items, 
-     *   the input to writeItems (which was the aggregate output of the processor's processItem for this chunk).
-     * 
-     * @test_Strategy: Intentionally fail writer at a specific record number.  Take the items passed as input
-     *   parameter to onWriteError, and set a String representation of this List as the job's exit status, which
-     *   will assert matches the expected value based on the chunk size and the input data and the failing record number.  
-     *   Also check the job fails.
-     */
-	@TCKTest(
-			apiRef={
-					@APIRef(className="javax.batch.api.chunk.listener.ItemWriteListener", methodName="onWriteError"),
-			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5431",
-			tckVersionUpdated="1.1.WORKING")
+    @TCKTest(
+		versions={"1.1.WORKING"},
+		assertions={"ItemWriteListener#onWriteError is passed the list of items that were being written by ItemWriter#writeItems when exception was thrown."},
+		specRefs={
+			@SpecRef(
+				version="1.0", section="9.1.1.3",
+				citations={"@param items specifies the list of items to write. This may be an empty list (e.g. if all the items have been filtered out by the ItemProcessor)."},
+				notes={"API for ItemWriter"}
+			),
+			@SpecRef(
+				version="1.0", section="9.2.6",
+				citations={"The onWriteError method receives control after an item writer writeItems throws an exception. The method receives the list of items sent to the item writer as input."},
+				notes={"API for ItemWriteListener"}
+			),
+		},
+		apiRefs={
+			@APIRef(className="javax.batch.api.chunk.ItemWriter", methodNames={"writeItems"}),
+			@APIRef(className="javax.batch.api.chunk.listener.ItemWriteListener", methodNames={"onWriteError"}),
+		},
+		issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5431"},
+		strategy= "Intentionally fail writer at a specific record number. Take the items passed as input parameter to onWriteError, "
+				+ "and set a String representation of this List as the job's exit status.  Check that this matches the expected value "
+				+ "based on the chunk size, input data, and failing record number. Also check that the job fails."
+	)
 	@Test
 	@org.junit.Test
 	public void testOnWriteErrorItems() throws Exception {
@@ -79,22 +85,30 @@ public class ListenerOnErrorTests {
 	    assertWithMessage("Testing execution for the WRITE LISTENER", GOOD_EXIT_STATUS, je.getExitStatus());
 	}
 
-    /**
-     * @testName: testOnProcessErrorItems
-     * 
-     * @assertion: Ensure the ItemProcessListener onProcessError is passed the right item, 
-     *   the input to processItem (the  output of the reader's readItem).
-     * 
-     * @test_Strategy: Intentionally fail processor at a specific record number.  Take the item passed as input
-     *   parameter to onProcessError, and set a String representation of this item as the job's exit status, which
-     *   we assert matches the expected value based on the input data and the failing record number.  Also check the job fails.
-     */
-	@TCKTest(
-			apiRef={
-					@APIRef(className="javax.batch.api.chunk.listener.ItemProcessListener", methodName="onProcessError"),
-			},
-			issueRef="https://java.net/bugzilla/show_bug.cgi?id=5431",
-			tckVersionUpdated="1.1.WORKING")
+    @TCKTest(
+    	versions={"1.1.WORKING"},
+    	assertions={"ItemProcessListener#onProcessError is passed the item that ItemProcessor#processItem throws an exception for."},
+    	specRefs={
+    		@SpecRef(
+    			version="1.0", section="9.1.1.2",
+    			citations={"The processItem method is part of a chunk step. It accepts an input item from an item reader and returns an item that gets passed onto the item writer."},
+    			notes={"API for ItemProcessor"}
+    		),
+    		@SpecRef(
+    			version="1.0", section="9.2.5",
+    			citations={"The onProcessError method receives control after an item processor processItem throws an exception. The method receives the item sent to the item processor as input."},
+    			notes={"API for ItemProcessListener"}
+    		),
+    	},
+    	apiRefs={
+    		@APIRef(className="javax.batch.api.chunk.ItemProcessor", methodNames={"processItem"}),
+    		@APIRef(className="javax.batch.api.chunk.listener.ItemProcessListener", methodNames={"onProcessError"}),
+    	},
+    	issueRefs={"https://java.net/bugzilla/show_bug.cgi?id=5431"},
+    	strategy= "Intentionally fail processor at a specific record number. Take the item passed as input parameter to onProcessError, "
+    			+ "and set a String representation of this item as the job's exit status. Check that this matches the expected value "
+    			+ "based on the input data and the failing record number. Also check that the job fails."    	
+    )
 	@Test
 	@org.junit.Test
 	public void testOnProcessErrorItems() throws Exception {

@@ -31,6 +31,7 @@
     <ref id="countInvocationsStepListener" class="com.ibm.jbatch.tck.artifacts.reusable.CountInvocationsStepListener" />
     <ref id="myBatchletImpl" class="com.ibm.jbatch.tck.artifacts.reusable.MyBatchletImpl" />
     <ref id="myParallelSubJobsExitStatusBatchlet" class="com.ibm.jbatch.tck.artifacts.reusable.MyParallelSubJobsExitStatusBatchlet" />
+    <ref id="simpleCustomItemReader" class="com.ibm.jbatch.tck.artifacts.reusable.SimpleCustomItemReader" />
     <ref id="simpleJobListener" class="com.ibm.jbatch.tck.artifacts.reusable.SimpleJobListener" />
     <ref id="transitionTrackerBatchlet" class="com.ibm.jbatch.tck.artifacts.reusable.TransitionTrackerBatchlet" />
     <ref id="artifactInstanceTestChunkListener" class="com.ibm.jbatch.tck.artifacts.specialized.ArtifactInstanceTestChunkListener" />
@@ -127,4 +128,5 @@
     <ref id="threadTrackingJobListener" class="com.ibm.jbatch.tck.artifacts.specialized.ThreadTrackingJobListener" />
     <ref id="threadTrackingStepListener" class="com.ibm.jbatch.tck.artifacts.specialized.ThreadTrackingStepListener" />
     <ref id="transitionDecider" class="com.ibm.jbatch.tck.artifacts.specialized.TransitionDecider" />
+    <ref id="verifySkipWriteListener" class="com.ibm.jbatch.tck.artifacts.specialized.VerifySkipWriteListener" />
 </batch-artifacts>

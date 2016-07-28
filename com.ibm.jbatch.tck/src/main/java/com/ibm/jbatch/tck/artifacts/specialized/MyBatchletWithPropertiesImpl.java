@@ -45,6 +45,10 @@ public class MyBatchletWithPropertiesImpl extends AbstractBatchlet {
     public String myDefaultProp1 = "Should get overwritten by default value";
     
     @Inject    
+    @BatchProperty (name="parentProp")
+    public String parentProp;
+    
+    @Inject    
     @BatchProperty
     public String mySubmittedProp = "This EYECATCHER should get overwritten by a submitted prop.";
     

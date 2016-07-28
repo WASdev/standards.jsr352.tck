@@ -22,12 +22,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Reference to a JSR 352 API that specifies a particular behavior.
+ * <br><br>
+ * <span style='font-weight: bold;'> Required Attributes </span>
+ * <br>
+ * Optional Attributes: className, methodName, note
+ */
 @Target({ElementType.METHOD}) 
 @Documented  
 @Retention(RetentionPolicy.RUNTIME) 
 public @interface APIRef {
-	String className() default "";    
-	String methodName() default "";   
-	String signature() default "";
-	String[] note() default {};
+	
+	/** Name of the class where the behavior is specified */
+	String className() default "";
+	
+	/** Names of the methods where the behavior is specified */
+	String[] methodNames() default {};
+	
+	/** Other comments about the APIRef */
+	String[] notes() default {};
 }
