@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 International Business Machines Corp.
+ * Copyright 2016 International Business Machines Corp.
  * 
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership. Licensed under the Apache License, 
@@ -27,6 +27,9 @@ import javax.batch.runtime.JobInstance;
 import javax.batch.runtime.Metric;
 import javax.batch.runtime.StepExecution;
 
+import com.ibm.jbatch.tck.annotations.APIRef;
+import com.ibm.jbatch.tck.annotations.SpecRef;
+import com.ibm.jbatch.tck.annotations.TCKTest;
 import com.ibm.jbatch.tck.artifacts.reusable.MyPersistentRestartUserData;
 import com.ibm.jbatch.tck.artifacts.specialized.MyItemProcessListenerImpl;
 import com.ibm.jbatch.tck.artifacts.specialized.MyItemReadListenerImpl;
@@ -35,6 +38,7 @@ import com.ibm.jbatch.tck.artifacts.specialized.MyMultipleExceptionsRetryReadLis
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipProcessListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipReadListener;
 import com.ibm.jbatch.tck.artifacts.specialized.MySkipWriteListener;
+import com.ibm.jbatch.tck.artifacts.specialized.VerifySkipWriteListener;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 import com.ibm.jbatch.tck.utils.TCKJobExecutionWrapper;
 
@@ -195,19 +199,19 @@ public class ChunkTests {
      * @assertion: Test will finish in FAILED status, with the onError chunk listener invoked
      * 
      * @test_Strategy: Test that the ChunkListener.onError method is driven for an exception occurring
-     * 		during the read-write-process batch loop
+     *         during the read-write-process batch loop
      */
     @Test
     @org.junit.Test
     public void testChunkOnErrorListener() throws Exception {
-    	
-    	String METHOD = "testChunkOnErrorListener";
-    	
-    	try {
-    		Reporter.log("Create job parameters for execution #1:<p>");
-    		Properties jobParams = new Properties();
-    		
-    		Reporter.log("execution.number=1<p>");
+        
+        String METHOD = "testChunkOnErrorListener";
+        
+        try {
+            Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            
+            Reporter.log("execution.number=1<p>");
             Reporter.log("readrecord.fail=5<p>");
             Reporter.log("app.arraysize=30<p>");
             jobParams.put("execution.number", "1");
@@ -602,7 +606,7 @@ public class ChunkTests {
             Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
             String exitStatus = execution1.getExitStatus();
-	        assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 0") || exitStatus.equals("TRUE: 1")));
+            assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 0") || exitStatus.equals("TRUE: 1")));
         } catch (Exception e) {
             handleException(METHOD, e);
         }
@@ -648,8 +652,8 @@ public class ChunkTests {
             Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
             String exitStatus = execution1.getExitStatus();
-	        assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 0") || exitStatus.equals("TRUE: 1")));
-	
+            assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 0") || exitStatus.equals("TRUE: 1")));
+    
         } catch (Exception e) {
             handleException(METHOD, e);
         }
@@ -673,26 +677,26 @@ public class ChunkTests {
     @Test
     @org.junit.Test
     public void testChunkTimeBased10Seconds() throws Exception {
-    	
-    	 String METHOD = "testChunkTimeBased10Seconds";
-    	 
-    	 String DEFAULT_SLEEP_TIME = "500";
+        
+         String METHOD = "testChunkTimeBased10Seconds";
+         
+         String DEFAULT_SLEEP_TIME = "500";
 
-    	try {
-	        Properties jobParams = new Properties();
-	        jobParams.put("execution.number", "1");
-	        jobParams.put("readrecord.fail", "31");
-	        jobParams.put("app.arraysize", "30");
-	        jobParams.put("app.sleeptime", System.getProperty("ChunkTests.testChunkTimeBased10Seconds.sleep",DEFAULT_SLEEP_TIME));
-	
-	
-	        JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkTimeBasedCheckpoint", jobParams);
-	        assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
-	        String exitStatus = execution1.getExitStatus();
-	        assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 9") || exitStatus.equals("TRUE: 10") || exitStatus.equals("TRUE: 11")));
-	
-	        Reporter.log("exit status = " + execution1.getExitStatus() + "<p>");
-    	 } catch (Exception e) {
+        try {
+            Properties jobParams = new Properties();
+            jobParams.put("execution.number", "1");
+            jobParams.put("readrecord.fail", "31");
+            jobParams.put("app.arraysize", "30");
+            jobParams.put("app.sleeptime", System.getProperty("ChunkTests.testChunkTimeBased10Seconds.sleep",DEFAULT_SLEEP_TIME));
+    
+    
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkTimeBasedCheckpoint", jobParams);
+            assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
+            String exitStatus = execution1.getExitStatus();
+            assertWithMessage("Testing execution #1", (exitStatus.equals("TRUE: 9") || exitStatus.equals("TRUE: 10") || exitStatus.equals("TRUE: 11")));
+    
+            Reporter.log("exit status = " + execution1.getExitStatus() + "<p>");
+         } catch (Exception e) {
              handleException(METHOD, e);
          }
     }
@@ -754,8 +758,8 @@ public class ChunkTests {
                 Reporter.log("execution #2 Job instance id=" + exec.getInstanceId() + "<p>");
                 assertWithMessage("Testing execution #2", BatchStatus.COMPLETED, exec.getBatchStatus());
                 String exitStatus = exec.getExitStatus();
-    	        assertWithMessage("Testing execution #2", (exitStatus.equals("TRUE: 9") || exitStatus.equals("TRUE: 10") || exitStatus.equals("TRUE: 11")));
-    	
+                assertWithMessage("Testing execution #2", (exitStatus.equals("TRUE: 9") || exitStatus.equals("TRUE: 10") || exitStatus.equals("TRUE: 11")));
+        
                 assertWithMessage("Testing execution #2", jobInstanceId, exec.getInstanceId());
             }
         } catch (Exception e) {
@@ -852,8 +856,8 @@ public class ChunkTests {
      *                  that extends the unskippable is not treated as skippable.     
      */
     @org.junit.Test
-	@Test(enabled=false) // Disabling per Bug 5403
-	@Ignore("Bug 5403.  Decided to exclude this test. Hopefully will introduce a modified version in 1.1")
+    @Test(enabled=false) // Disabling per Bug 5403
+    @Ignore("Bug 5403.  Decided to exclude this test. Hopefully will introduce a modified version in 1.1")
     public void testChunkSkipMultipleExceptions() throws Exception {
 
         String METHOD = "testChunkSkipRead";
@@ -1314,6 +1318,53 @@ public class ChunkTests {
     }
 
     /*
+     * @testName: testChunkSkipWriteVerify
+     * @assertion: job will finish successfully as COMPLETED and skippable exceptions will be recognized 
+     *             5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
+     *             5.2.1.2 - Processor
+     *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
+     *             5.2.1 - Chunk, item-count, skip-limit
+     *             5.2.1.4 - Exception Handling - skippable-exception-classes
+     * 
+     * @test_Strategy: start a job with item-count specified. Set the writer to throw a skippable exception at predetermined location
+     *                     so that a skipWriteListener is called. The Listener will verify that the number of objects is equal to the
+     *                     the specified item-count, and that none of those objects are null.
+     */
+    @TCKTest(
+            specRef={
+                    @SpecRef(section={"9.2.7"},version="1.0", note="See Javadoc"),
+            },
+            apiRef={
+                    @APIRef(className="javax.batch.api.chunk.listener.SkipWriteListener")
+            },
+            tckVersionUpdated="1.1.WORKING")    
+    @Test
+    @org.junit.Test
+    public void testChunkSkipWriteVerify() throws Exception {
+        String METHOD = "testChunkSkipWriteVerify";
+        try {
+            Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            Reporter.log("app.arraysize=30<p>");
+            jobParams.put("app.arraysize", "30");
+
+            Reporter.log("Locate job XML file: chunkSkipVerifyTest.xml<p>");
+
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkSkipVerifyTest", jobParams);
+
+            Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
+            Reporter.log("execution #1 JobExecution getExitStatus()=" + execution1.getExitStatus() + "<p>");
+            assertWithMessage("Testing execution #1", BatchStatus.COMPLETED, execution1.getBatchStatus());
+            assertWithMessage("Testing execution #1", VerifySkipWriteListener.GOOD_EXIT_STATUS, execution1.getExitStatus());
+        } catch (Exception e) {
+            handleException(METHOD, e);
+        }
+
+    }
+
+    
+    /*
      * @testName: testChunkSkipReadNoSkipChildEx
      * @assertion: job will finish as FAILED and excluded skippable exceptions will be recognized 
      *             5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
@@ -1362,7 +1413,7 @@ public class ChunkTests {
     /*
      * @testName: testChunkRetryRead
      * @assertion: job will finish successfully as COMPLETED and retryable skippable exceptions will be recognized 
-     * 			   5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
+     *                5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
      *             5.2.1.2 - Processor
      *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
      *             5.2.1 - Chunk, item-count, retry-limit
@@ -1421,8 +1472,8 @@ public class ChunkTests {
      *                  test that the job completes fails and that the application recognized the retryable exception that extends the unretryable is not treated as retryable.  
      */
     @org.junit.Test
-	@Test(enabled=false) // Disabling per Bug 5403
-	@Ignore("Bug 5403.  Decided to exclude this test. Hopefully will introduce a modified version in 1.1")
+    @Test(enabled=false) // Disabling per Bug 5403
+    @Ignore("Bug 5403.  Decided to exclude this test. Hopefully will introduce a modified version in 1.1")
     public void testChunkRetryMultipleExceptions() throws Exception {
 
         String METHOD = "testChunkRetryMultipleExceptions";
@@ -1454,7 +1505,7 @@ public class ChunkTests {
      * @testName: testChunkItemListeners
      * @assertion: each job will finish successfully as COMPLETED and the invocation of each type of item listener
      *             will be recognized 
-     * 			   5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
+     *                5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
      *             5.2.1.2 - Processor, 5.2.2.1 - Processor Properties
      *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
      *             5.2.1 - Chunk, item-count, retry-limit
@@ -1550,7 +1601,7 @@ public class ChunkTests {
      * @testName: testChunkItemListenersOnError
      * @assertion: each job will finish successfully as COMPLETED and the invocation of each type of item listener
      *             will be recognized 
-     * 			   5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
+     *             5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
      *             5.2.1.2 - Processor, 5.2.2.1 - Processor Properties
      *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
      *             5.2.1 - Chunk, item-count, retry-limit
