@@ -29,6 +29,7 @@ import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.Metric;
 import javax.batch.runtime.StepExecution;
+import javax.crypto.CipherInputStream;
 
 import org.junit.Before;
 import org.testng.Reporter;
@@ -36,9 +37,10 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.ibm.jbatch.tck.ann.APIRef;
-import com.ibm.jbatch.tck.ann.SpecRef;
-import com.ibm.jbatch.tck.ann.TCKTest;
+import com.ibm.jbatch.tck.annotations.APIRef;
+import com.ibm.jbatch.tck.annotations.SpecRef;
+import com.ibm.jbatch.tck.annotations.TCKTest;
+import com.ibm.jbatch.tck.artifacts.specialized.ExecutionCountBatchlet;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 public class JobExecutableSequenceTests {
@@ -63,7 +65,7 @@ public class JobExecutableSequenceTests {
 						@SpecRef(section="5.3",version="1.0", notes={""})
 				},
 				apiRefs={
-						@APIRef(className="com.ibm.jbatch.tck.artifacts.specialized.MyBatchletImpl")
+						@APIRef(className="")
 				},
 				versions="1.1.WORKING",
 				assertions={"Section 5.3 Flow"}
@@ -100,11 +102,10 @@ public class JobExecutableSequenceTests {
 	
 	 @TCKTest(
 				specRefs={
-						@SpecRef(section="10.8",version="1.0", notes={""}),
-						@SpecRef(section="8.9.3",version="1.0", notes={""})
+						@SpecRef(section="8.9.3",version="1.0", citations={"The specification prohibits ‘next’ and ‘to’ attribute values that result in a “loop”."})
 				},
 				apiRefs={
-						@APIRef(className="com.ibm.jbatch.tck.artifacts.specialized.MyBatchletImpl")
+						@APIRef(className="")
 				},
 				versions="1.1.WORKING",
 				assertions={"A step is transitioned to more than one in execution of a job"}
@@ -137,7 +138,7 @@ public class JobExecutableSequenceTests {
 	
 	
 	/**
-	 * @testName: testJobTransitionLoop
+	 * @testName: testJobTransitionLoopWithRestart
 	 * @assertion: Section 10.8 restart processing
 	 * @test_Strategy: 1. setup a job consisting of 3 steps (step1 next to step2, step2 fail, restart @ step1, transition to step 2, back to step 1)
 	 * 				   2. start job 
@@ -150,11 +151,11 @@ public class JobExecutableSequenceTests {
 	 */
 	 @TCKTest(
 				specRefs={
-						@SpecRef(section="10.8",version="1.0", notes={""}),
+						@SpecRef(section="10.8",version="1.0", citations={"...for restart we need: a definition of where in the job definition to begin; rules for deciding whether or not to execute the current execution element; and rules for performing transitioning, especially taking into account that all steps relevant to transitioning may not have executed on this (restart) execution."}),
 						@SpecRef(section="8.9.3",version="1.0", notes={""})
 				},
 				apiRefs={
-						@APIRef(className="com.ibm.jbatch.tck.artifacts.specialized.ExecutionCountBatchlet")
+						@APIRef(className="")
 				},
 				versions="1.1.WORKING",
 				assertions={"A step is not executed more than once on job restart if not set with \"allow-start-if-complete\"",
@@ -212,7 +213,7 @@ public class JobExecutableSequenceTests {
 			assertObjEquals("step2", step.getStepName());
 			
 			Reporter.log("Second Job execution getExitStatus()="+restartedJobExec.getExitStatus()+"<p>");
-			assertObjEquals("Exited on execution 2 of ExecutionCountBatchlet", restartedJobExec.getExitStatus());
+			assertObjEquals(ExecutionCountBatchlet.output+"2", restartedJobExec.getExitStatus());
 			
 			Reporter.log("Second Job execution getBatchStatus()="+restartedJobExec.getBatchStatus()+"<p>");
 			assertObjEquals(BatchStatus.FAILED, restartedJobExec.getBatchStatus());

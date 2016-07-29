@@ -30,6 +30,8 @@ public class ExecutionCountBatchlet extends AbstractBatchlet {
     @Inject
     @BatchProperty (name="executionCount.number")
     String executionNumber;
+    
+    public static final String output="ExecutionCountBatchlet Exited on execution ";
 	
 	@Override
 	public String process() throws Exception {	
@@ -43,7 +45,7 @@ public class ExecutionCountBatchlet extends AbstractBatchlet {
 			executionCount=0;
 		}
 	
-		jobCtx.setExitStatus("Exited on execution "+executionCount+" of ExecutionCountBatchlet");
+		jobCtx.setExitStatus(output+executionCount);
 		
 		return "EXECUTION "+executionCount;		
 	}
