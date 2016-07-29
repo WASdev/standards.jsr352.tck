@@ -173,17 +173,15 @@ public class ExecutionTests {
    	/*
    	 * @testName: testJobWithNoMatchingTransitionElement
    	 * @assertion: job will finish successfully with an exit status set to "nullUnusedExitStatusForPartitions"
-   	 * @test_Strategy: The job is written with all transitions elements in the first step. None will match the return value of the step.
+   	 * @test_Strategy: The job is written with no transitions elements in the first step, and no next attribute for step1.
    	 * 					With no clear next step, the job should finish on step 1. The test ensures that step 2 is not run.
    	 */
    	
    	@TCKTest(
    			specRefs={
-   					@SpecRef(section="8.6",version="1.0", notes={"See Javadoc"}),
+   					@SpecRef(section="8.9.2",version="1.0", citation={"If a match is not found among the transition elements... If execution ended normally, and the execution element whose execution is completing does not contain a ‘next’ attribute, then the job ends normally (with COMPLETED batch status)."}),
    			},
-   			apiRefs={
-   					@APIRef(className="com.ibm.jbatch.container.jsl.TransitionElement.java")
-   			},
+   			apiRefs={},
    			versions="1.1.WORKING",
    			assertions={"Step 2 does not execute"})
    	@Test
@@ -201,7 +199,8 @@ public class ExecutionTests {
    			Reporter.log("execution #1 JobExecution getBatchStatus()="+jobExec.getBatchStatus()+"<p>");
    			assertObjEquals(BatchStatus.COMPLETED, jobExec.getBatchStatus());
    			Reporter.log("execution #1 JobExecution getExitStatus()="+jobExec.getExitStatus()+"<p>");
-   			assertObjEquals("nullUnusedExitStatusForPartitions", jobExec.getExitStatus());
+   			final String expectedExitStatus="nullUnusedExitStatusForPartitions";
+   			assertObjEquals(expectedExitStatus, jobExec.getExitStatus());
    		} catch (Exception e) {
    			handleException(METHOD, e);
    		}
