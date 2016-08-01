@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.jbatch.tck.annotations;
+package com.ibm.jbatch.tck.ann;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

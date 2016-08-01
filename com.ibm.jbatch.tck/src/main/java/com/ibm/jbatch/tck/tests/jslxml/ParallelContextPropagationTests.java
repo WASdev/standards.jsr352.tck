@@ -24,7 +24,7 @@ import java.util.Properties;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.StepExecution;
 
-import com.ibm.jbatch.tck.annotations.*;
+import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 import org.junit.Before;
