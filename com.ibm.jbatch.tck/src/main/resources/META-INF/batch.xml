@@ -46,8 +46,10 @@
     <ref id="contextsGetIdStepContextTestBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.ContextsGetIdStepContextTestBatchlet" />
     <ref id="deciderTestsBatchlet" class="com.ibm.jbatch.tck.artifacts.specialized.DeciderTestsBatchlet" />
     <ref id="deciderTestsDecider" class="com.ibm.jbatch.tck.artifacts.specialized.DeciderTestsDecider" />
+    <ref id="deciderReceivesCorrectStepExecutionsDecider" class="com.ibm.jbatch.tck.artifacts.specialized.DeciderReceivesCorrectStepExecutionsDecider" />
     <ref id="deciderTestsJobListener" class="com.ibm.jbatch.tck.artifacts.specialized.DeciderTestsJobListener" />
     <ref id="defaultValueArrayWriter" class="com.ibm.jbatch.tck.artifacts.specialized.DefaultValueArrayWriter" />
+    <ref id="doNothingBatchlet" class="com.ibm.jbatch.tck.artifacts.reusable.DoNothingBatchlet" />
     <ref id="doSomethingArrayItemProcessorImpl" class="com.ibm.jbatch.tck.artifacts.specialized.DoSomethingArrayItemProcessorImpl" />
     <ref id="doSomethingArrayItemReaderImpl" class="com.ibm.jbatch.tck.artifacts.specialized.DoSomethingArrayItemReaderImpl" />
     <ref id="doSomethingItemProcessorImpl" class="com.ibm.jbatch.tck.artifacts.specialized.DoSomethingItemProcessorImpl" />
