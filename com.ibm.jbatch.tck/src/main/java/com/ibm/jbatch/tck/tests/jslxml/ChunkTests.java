@@ -27,9 +27,7 @@ import javax.batch.runtime.JobInstance;
 import javax.batch.runtime.Metric;
 import javax.batch.runtime.StepExecution;
 
-import com.ibm.jbatch.tck.annotations.APIRef;
-import com.ibm.jbatch.tck.annotations.SpecRef;
-import com.ibm.jbatch.tck.annotations.TCKTest;
+import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.artifacts.reusable.MyPersistentRestartUserData;
 import com.ibm.jbatch.tck.artifacts.specialized.MyItemProcessListenerImpl;
 import com.ibm.jbatch.tck.artifacts.specialized.MyItemReadListenerImpl;
@@ -1317,27 +1315,32 @@ public class ChunkTests {
 
     }
 
-    /*
-     * @testName: testChunkSkipWriteVerify
-     * @assertion: job will finish successfully as COMPLETED and skippable exceptions will be recognized 
-     *             5.2.1.1 - Reader, 5.2.1.1.1 - Reader Properties,
-     *             5.2.1.2 - Processor
-     *             5.2.1.3 - Writer, 5.2.1.3.1 - Writer Properties
-     *             5.2.1 - Chunk, item-count, skip-limit
-     *             5.2.1.4 - Exception Handling - skippable-exception-classes
-     * 
-     * @test_Strategy: start a job with item-count specified. Set the writer to throw a skippable exception at predetermined location
-     *                     so that a skipWriteListener is called. The Listener will verify that the number of objects is equal to the
-     *                     the specified item-count, and that none of those objects are null.
-     */
     @TCKTest(
-            specRef={
-                    @SpecRef(section={"9.2.7"},version="1.0", note="See Javadoc"),
-            },
-            apiRef={
-                    @APIRef(className="javax.batch.api.chunk.listener.SkipWriteListener")
-            },
-            tckVersionUpdated="1.1.WORKING")    
+    	versions={"1.1.WORKING"},
+    	assertions = {"A SkipWriteListener is passed the list of items (the chunk) being written by an ItemWriter when a skippable exception is thrown."},
+    	specRefs={
+    		@SpecRef(
+    			version="1.0", section="8.2.1.4",
+    			citations={"A Skip Listener receives control after a skippable exception is thrown by the reader, processor, or writer."}
+    		),
+    		@SpecRef(version="1.0", section="9.1.1.3", notes={"API for ItemWriter"}),
+    		@SpecRef(
+        		version="1.0", section="9.2.7",
+        		citations={"The onSkipWriteItems method receives control when a skippable exception is thrown from an ItemWriter writeItems method. "
+        				 + "This method receives the exception and the items that were skipped as an input."},
+        		notes={"API for SkipWriteListener"}
+        	),
+        },
+        apiRefs={
+            @APIRef(className="javax.batch.api.chunk.ItemWriter", methodNames={"writeItems"}),
+            @APIRef(className="javax.batch.api.chunk.listener.SkipWriteListener", methodNames={"onSkipWriteItem"})
+        },
+        issueRefs={"https://github.com/WASdev/standards.jsr352.tck/issues/5","https://java.net/bugzilla/show_bug.cgi?id=5655"},
+        strategy="Set up a chunk step with 30 hard-coded items to be read/ processed/ written, broken down into 10 chunks of size 3. "
+        	   + "Force the ItemWriter to throw a skippable exception in some of the chunks. Verify that the SkipWriteListener receives "
+        	   + "the correct number of items, and more specifically that the items received are the correct ones (it should receive all "
+        	   + "of the items from each chunk where an exception was thrown). Finally, check that the job completes."
+    )    
     @Test
     @org.junit.Test
     public void testChunkSkipWriteVerify() throws Exception {
