@@ -1670,6 +1670,45 @@ public class ChunkTests {
 
     }
 
+    @TCKTest(
+       	versions = {"1.1.WORKING"},
+       	assertions = {"A chunk step with a retry-limit of 0 will not retry any exceptions."},
+       	specRefs = {
+       		@SpecRef(
+       			version = "1.0", section = "8.2.1",
+       			citations = {"retry-limit: Specifies the number of times a step will retry if any configured retryable exceptions are thrown"}
+       		),
+            @SpecRef(
+               	version = "1.0", section = "8.2.1.4.2",
+               	citations = {"The total number of retry attempts is set by the retry-limit attribute on the chunk element."}
+            )
+        },
+        issueRefs = {"https://github.com/WASdev/standards.jsr352.tck/issues/19"},
+        strategy = "Issue a job with a retry-limit of 0 and a configured retryable exception. "
+        		 + "On JobExecution1, throw the retryable exception once and verify that the job fails.",
+        notes = {"For some JSL attributes, a value of 0 means no limit (see start-limit and time-limit). This is NOT the case for retry-limit."}
+    )
+    @Test
+    @org.junit.Test
+    public void testChunkRetryLimit0() throws Exception {
+    	String METHOD = "testChunkRetryLimit0";
+        try {
+        	Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            jobParams.put("retry.limit", "0");
+            jobParams.put("throw.reader.exception.for.these.items", "0");
+
+            Reporter.log("Locate job XML file: chunkRetryLimitTest.xml<p>");
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkRetryLimitTest", jobParams);
+
+            Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
+            assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+        } catch (Exception e) {
+        	handleException(METHOD, e);
+        }
+    }      
+    
     /*
      * @testName: testChunkItemListeners
      * @assertion: each job will finish successfully as COMPLETED and the invocation of each type of item listener
