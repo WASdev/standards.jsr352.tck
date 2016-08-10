@@ -1352,7 +1352,49 @@ public class ChunkTests {
         } catch (Exception e) {
         	handleException(METHOD, e);
         }
-    }    
+    }
+    
+    @TCKTest(
+        versions = {"1.1.WORKING"},
+        assertions = {"Skippable exceptions thrown from multiple batch artifacts within the same step all count towards that step's skip-limit"},
+        specRefs = {
+        	@SpecRef(
+        		version = "1.0", section = "8.2.1",
+        		citations = {"skip-limit: Specifies the number of exceptions a step will skip if any configured skippable exceptions are thrown"}
+        	),
+            @SpecRef(
+               	version = "1.0", section = "8.2.1.4.1",
+                citations = {"The skippable-exception-classes element specifies a set of exceptions that chunk processing will skip. [...] "
+                		   + "It applies to exceptions thrown from the reader, processor, writer batch artifacts of a chunk type step. ",
+                		     "The total number of skips is set by the skip-limit attribute on the chunk element."}
+            )
+        },
+        issueRefs = {"https://github.com/WASdev/standards.jsr352.tck/issues/19"},
+        strategy = "Issue a job with a skip-limit of 2 and a configured skippable exception. On JobExecution1, throw the skippable exception "
+        		 + "once from each of the Reader, Processor, and Writer (3 exceptions thrown in total). Verify that the job fails."
+    )
+    @Test
+    @org.junit.Test
+    public void testChunkSkipLimitExceededByRPWCombo() throws Exception {
+    	String METHOD = "testChunkSkipLimitExceededByRPWCombo";
+        try {
+        	Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            jobParams.put("skip.limit", "2");
+            jobParams.put("throw.reader.exception.for.these.items", "0");
+            jobParams.put("throw.processor.exception.for.these.items", "1");
+            jobParams.put("throw.writer.exception.for.these.items", "2");
+
+            Reporter.log("Locate job XML file: chunkSkipLimitTest.xml<p>");
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkSkipLimitTest", jobParams);
+
+            Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
+            assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+        } catch (Exception e) {
+        	handleException(METHOD, e);
+        }
+    }
     
     @TCKTest(
     	versions={"1.1.WORKING"},
