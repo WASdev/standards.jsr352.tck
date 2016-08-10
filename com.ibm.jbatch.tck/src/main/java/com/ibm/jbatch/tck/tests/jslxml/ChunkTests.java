@@ -1316,6 +1316,45 @@ public class ChunkTests {
     }
 
     @TCKTest(
+    	versions = {"1.1.WORKING"},
+    	assertions = {"A chunk step with a skip-limit of 0 will not skip any exceptions."},
+    	specRefs = {
+    		@SpecRef(
+    			version = "1.0", section = "8.2.1",
+    			citations = {"skip-limit: Specifies the number of exceptions a step will skip if any configured skippable exceptions are thrown"}
+    		),
+            @SpecRef(
+               	version = "1.0", section = "8.2.1.4.1",
+               	citations = {"The total number of skips is set by the skip-limit attribute on the chunk element."}
+            )
+        },
+        issueRefs = {"https://github.com/WASdev/standards.jsr352.tck/issues/19"},
+        strategy = "Issue a job with a skip-limit of 0 and a configured skippable exception. "
+        		 + "On JobExecution1, throw the skippable exception once and verify that the job fails.",
+        notes = {"For some JSL attributes, a value of 0 means no limit (see start-limit and time-limit). This is NOT the case for skip-limit."}
+    )
+    @Test
+    @org.junit.Test
+    public void testChunkSkipLimit0() throws Exception {
+    	String METHOD = "testChunkSkipLimit0";
+        try {
+        	Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            jobParams.put("skip.limit", "0");
+            jobParams.put("throw.reader.exception.for.these.items", "0");
+
+            Reporter.log("Locate job XML file: chunkSkipLimitTest.xml<p>");
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("chunkSkipLimitTest", jobParams);
+
+            Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
+            assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+        } catch (Exception e) {
+        	handleException(METHOD, e);
+        }
+    }    
+    
+    @TCKTest(
     	versions={"1.1.WORKING"},
     	assertions = {"A SkipWriteListener is passed the list of items (the chunk) being written by an ItemWriter when a skippable exception is thrown."},
     	specRefs={
