@@ -16,8 +16,6 @@
  */
 package com.ibm.jbatch.tck.artifacts.specialized;
 
-import java.util.logging.Logger;
-
 import javax.batch.api.chunk.listener.SkipReadListener;
 import javax.batch.runtime.context.JobContext;
 import javax.batch.runtime.context.StepContext;
@@ -35,9 +33,6 @@ public class MySkipReaderExceedListener implements SkipReadListener {
 
     @Inject
     StepContext stepCtx;
-
-    private final static String sourceClass = MySkipReadListener.class.getName();
-    private final static Logger logger = Logger.getLogger(sourceClass);
 
     public static final String GOOD_EXIT_STATUS = "MySkipReadListener: GOOD STATUS";
     public static final String BAD_EXIT_STATUS_INCORRECT_NUMBER_SKIPS = "MySkipReadListener: BAD STATUS_INCORRECT_NUMBER_SKIPS";

@@ -33,7 +33,6 @@ public class SkipReader extends AbstractItemReader {
 
 	private final static Logger logger = Logger.getLogger(SkipReader.class.getName());
 	
-    private int count = 0;
     private int[] readerDataArray;
     private int idx;
     private boolean threwSkipException = false;
@@ -99,7 +98,6 @@ public class SkipReader extends AbstractItemReader {
     public ReadRecord readItem() throws Exception {
 
         if (threwSkipException) {
-            count++;
             idx++;
             threwSkipException = false;
             throwChildEx = true;
@@ -124,7 +122,6 @@ public class SkipReader extends AbstractItemReader {
                 throw new MyChildException("fail on purpose with MyChildException");
             }
         }
-        count = count + 1;
         idx = idx + 1;
         _cpd.setCurrentIndex(i);
         return new ReadRecord(readerDataArray[i]);
