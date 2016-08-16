@@ -18,13 +18,12 @@ package com.ibm.jbatch.tck.tests.jslxml;
 
 import static com.ibm.jbatch.tck.utils.AssertionUtils.assertObjEquals;
 
-
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 
+import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 import org.junit.BeforeClass;
@@ -35,8 +34,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class ExecutionTests {
-
-	private final static Logger logger = Logger.getLogger(ExecutionTests.class.getName());
 
 	private static JobOperatorBridge jobOp;
 
@@ -175,15 +172,20 @@ public class ExecutionTests {
    	 * @assertion: job will finish successfully with an exit status set to "nullUnusedExitStatusForPartitions"
    	 * @test_Strategy: The job is written with no transitions elements in the first step, and no next attribute for step1.
    	 * 					With no clear next step, the job should finish on step 1. The test ensures that step 2 is not run.
-   	 */
-   	
+   	 */   	
    	@TCKTest(
-   			specRefs={
-   					@SpecRef(section="8.9.2",version="1.0", citation={"If a match is not found among the transition elements... If execution ended normally, and the execution element whose execution is completing does not contain a ‘next’ attribute, then the job ends normally (with COMPLETED batch status)."}),
-   			},
-   			apiRefs={},
-   			versions="1.1.WORKING",
-   			assertions={"Step 2 does not execute"})
+   		versions="1.1.WORKING",
+   		assertions={"Step 2 does not execute"},
+   		specRefs={
+   			@SpecRef(
+   				version="1.0", section="8.9.2", 
+   				citations={
+   					"If a match is not found among the transition elements [...] If execution ended normally, and the execution element whose execution "
+   					+ "is completing does not contain a ‘next’ attribute, then the job ends normally (with COMPLETED batch status)."
+   				}
+   			)
+   		}
+   	)
    	@Test
    	@org.junit.Test  
    	public void testJobWithNoMatchingTransitionElement() throws Exception {
