@@ -18,10 +18,14 @@ package com.ibm.jbatch.tck.artifacts.basicchunk;
 
 import javax.batch.api.BatchProperty;
 import javax.batch.api.chunk.ItemProcessor;
+import javax.batch.runtime.context.JobContext;
 import javax.inject.Inject;
 
 @javax.inject.Named("basicProcessor")
 public class BasicProcessor implements ItemProcessor {
+	
+	@Inject
+    JobContext jobCtx;
 	
 	@Inject
     @BatchProperty(name = "throw.processor.exception.for.these.items")
@@ -65,6 +69,8 @@ public class BasicProcessor implements ItemProcessor {
 		
 		//throwing exception takes precedence over filtering
 		if (processorExceptionShouldBeThrownForCurrentItem()) {
+			//set the job exit status so we can determine which exception was last thrown
+        	jobCtx.setExitStatus("BasicProcessorException:Item#" + currentItem.getId());
 			throw new BasicProcessorException("BasicProcessorException thrown for item " + currentItem.getId());
         }
 		

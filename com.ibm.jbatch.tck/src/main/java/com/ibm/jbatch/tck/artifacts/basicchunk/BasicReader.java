@@ -20,11 +20,15 @@ import java.io.Serializable;
 
 import javax.batch.api.BatchProperty;
 import javax.batch.api.chunk.AbstractItemReader;
+import javax.batch.runtime.context.JobContext;
 import javax.inject.Inject;
 
 @javax.inject.Named("basicReader")
 public class BasicReader extends AbstractItemReader {
 
+	@Inject
+    JobContext jobCtx;
+	
 	@Inject    
     @BatchProperty(name = "number.of.items.to.be.read")
     String injectedNumberOfItemsToBeRead;
@@ -58,11 +62,18 @@ public class BasicReader extends AbstractItemReader {
 
     @Override
     public BasicItem readItem() throws Exception {
+    	/* Note that BasicReader has no concept of rolling back after a retryable exception is thrown.
+    	 * Example: chunk size is 2, we plan to read 10 items (#0-#9), but a retryable  exception is thrown while reading item #1 
+    	 * In this case, the reader goes on to read #2 when it should be rolling back to #0, and so the writer will never receive 
+    	 * #0, even though it was previously read successfully */
+    	
     	currentItemId++;
     	
     	if (currentItemId < numberOfItemsToBeRead) {
     		currentItem = new BasicItem(currentItemId);
             if (readerExceptionShouldBeThrownForCurrentItem()) {
+            	//set the job exit status so we can determine which exception was last thrown
+            	jobCtx.setExitStatus("BasicReaderException:Item#" + currentItem.getId());
             	throw new BasicReaderException("BasicReaderException thrown for item " + currentItem.getId());
             }        	
         	currentItem.setRead(true);

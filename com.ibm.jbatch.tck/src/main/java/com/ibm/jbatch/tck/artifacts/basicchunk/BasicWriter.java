@@ -21,11 +21,15 @@ import java.util.List;
 
 import javax.batch.api.BatchProperty;
 import javax.batch.api.chunk.AbstractItemWriter;
+import javax.batch.runtime.context.JobContext;
 import javax.inject.Inject;
 
 @javax.inject.Named("basicWriter")
 public class BasicWriter extends AbstractItemWriter {
 
+	@Inject
+    JobContext jobCtx;
+	
 	@Inject
     @BatchProperty(name = "throw.writer.exception.for.these.items")
     String injectedThrowWriterExceptionForTheseItems;
@@ -53,6 +57,8 @@ public class BasicWriter extends AbstractItemWriter {
 			currentItem = (BasicItem)item;
 			
 			if (writerExceptionShouldBeThrownForCurrentItem()) {
+				//set the job exit status so we can determine which exception was last thrown
+            	jobCtx.setExitStatus("BasicWriterException:Item#" + currentItem.getId());
 				throw new BasicWriterException("BasicWriterException thrown for item " + currentItem.getId());
 	        }
 			

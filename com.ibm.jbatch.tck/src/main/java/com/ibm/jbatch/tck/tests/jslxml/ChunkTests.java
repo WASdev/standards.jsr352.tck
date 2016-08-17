@@ -1427,6 +1427,7 @@ public class ChunkTests {
 
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+            assertWithMessage("retry-limit was exceeded by the correct exception", "BasicReaderException:Item#0", execution1.getExitStatus());
         } catch (Exception e) {
         	handleException(METHOD, e);
         }
@@ -1469,6 +1470,7 @@ public class ChunkTests {
 
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+            assertWithMessage("retry-limit was exceeded by the correct exception", "BasicWriterException:Item#2", execution1.getExitStatus());
         } catch (Exception e) {
         	handleException(METHOD, e);
         }
@@ -1704,6 +1706,7 @@ public class ChunkTests {
 
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+            assertWithMessage("retry-limit was exceeded by the correct exception", "BasicReaderException:Item#0", execution1.getExitStatus());
         } catch (Exception e) {
         	handleException(METHOD, e);
         }
@@ -1746,6 +1749,7 @@ public class ChunkTests {
 
             Reporter.log("execution #1 JobExecution getBatchStatus()=" + execution1.getBatchStatus() + "<p>");
             assertWithMessage("Testing execution #1", BatchStatus.FAILED, execution1.getBatchStatus());
+            assertWithMessage("retry-limit was exceeded by the correct exception", "BasicWriterException:Item#2", execution1.getExitStatus());
         } catch (Exception e) {
         	handleException(METHOD, e);
         }
