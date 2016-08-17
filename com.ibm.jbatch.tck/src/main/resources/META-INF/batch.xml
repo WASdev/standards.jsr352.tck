@@ -1,4 +1,7 @@
 <batch-artifacts xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+    <ref id="basicProcessor" class="com.ibm.jbatch.tck.artifacts.basicchunk.BasicProcessor" />
+    <ref id="basicReader" class="com.ibm.jbatch.tck.artifacts.basicchunk.BasicReader" />
+    <ref id="basicWriter" class="com.ibm.jbatch.tck.artifacts.basicchunk.BasicWriter" />
     <ref id="inventoryInitProcessor" class="com.ibm.jbatch.tck.artifacts.chunkartifacts.InventoryInitProcessor" />
     <ref id="inventoryInitReader" class="com.ibm.jbatch.tck.artifacts.chunkartifacts.InventoryInitReader" />
     <ref id="inventoryInitWriter" class="com.ibm.jbatch.tck.artifacts.chunkartifacts.InventoryInitWriter" />
