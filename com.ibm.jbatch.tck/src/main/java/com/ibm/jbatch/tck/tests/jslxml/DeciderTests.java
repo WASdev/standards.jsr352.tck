@@ -1027,7 +1027,8 @@ public class DeciderTests implements StatusConstants {
 				 + "JobExecution4: only 1 step re-executes (allow-start-if-complete=true only for split1flow2step1), verify that the Decider receives the correct "
 				 + "mix of old and new StepExecutions, and check that the job completes."
 	)
-	@Test/*(enabled=false)*/ //This test exposes a bug in the RI, disable as needed
+    //This test exposes bug (https://github.com/WASdev/standards.jsr352.jbatch/issues/48) in the RI, disable as needed
+	@Test/*(enabled=false)*/ 
 	@org.junit.Test
 	public void testDeciderReceivesCorrectStepExecutionsAfterSplit() throws Exception {
 		String METHOD = "testDeciderReceivesCorrectStepExecutionsAfterSplit";
@@ -1067,7 +1068,11 @@ public class DeciderTests implements StatusConstants {
 			String jobExec2Split1Flow1Step1 = jobExec2StepExecs[0];
 			String jobExec2Split1Flow2Step1 = jobExec2StepExecs[1];
 			
-			assertWithMessage("Execution for split1flow1step1 in jobExec2 should be the same as in jobExec1", jobExec1Split1Flow1Step1, jobExec2Split1Flow1Step1);
+			StringBuffer explanation = new StringBuffer("\n-----------------------------------\nThis is a known failure and expected result when running the Maven build.\nThe cause is RI bug: https://github.com/WASdev/standards.jsr352.jbatch/issues/48\n");
+			explanation.append("But there's no question from the spec perspective that this test SHOULD pass on your implementation or any other implementation.\n");
+			explanation.append("So it's currently included in the TCK even though it will fail the Maven build currently).\n-----------------------------------\n");
+
+			assertWithMessage(explanation.toString() + "Execution for split1flow1step1 in jobExec2 should be the same as in jobExec1", jobExec1Split1Flow1Step1, jobExec2Split1Flow1Step1);
 			assertWithMessage("Execution for split1flow2step1 in jobExec2 should be the same as in jobExec1", jobExec1Split1Flow2Step1, jobExec2Split1Flow2Step1);
 			assertWithMessage("Expected job to be STOPPED after second execution", BatchStatus.STOPPED, jobExec2.getBatchStatus());
 			
