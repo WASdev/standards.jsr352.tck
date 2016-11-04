@@ -25,6 +25,7 @@ import javax.batch.runtime.JobExecution;
 
 import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.artifacts.specialized.ExitStatusBatchlet;
+import com.ibm.jbatch.tck.artifacts.specialized.JobContextExitStatusListener;
 import com.ibm.jbatch.tck.artifacts.specialized.StepContextExitStatusListener;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
@@ -215,7 +216,94 @@ public class ExitStatusTests {
 
             //First assertion: by the time control is passed back to the Job Operator, the exit status should have defaulted from null to a COMPLETED batch status
             assertWithMessage(null, BatchStatus.COMPLETED.toString(), stepExitStatus);
-            //Second assertion: If the exit status at the time of afterStep() is not null as expected, the Step Listener will throw an exception which causes the job to fail
+            //Second assertion: If the exit status at the time of afterStep() is not a null value as expected, the Step Listener will throw an exception which causes the job to fail
+            assertWithMessage("Expect Job Execution to be COMPLETED", BatchStatus.COMPLETED, execution1.getBatchStatus());
+        } catch (Exception e) {
+            handleException(METHOD, e);
+        }
+    }
+    
+    @TCKTest(
+        versions = {"1.0"},
+        assertions = {"A JobListener artifact can obtain the user-defined exit status for the job via a call to JobContext.getExitStatus()"},
+        specRefs = {
+           	@SpecRef(version = "1.0", section = "9.2.1", citations = "JobListener intercepts job execution", notes = "API for javax.batch.api.listener.JobListener"),
+           	@SpecRef(version = "1.0", section = "10.9.1", notes = "API for javax.batch.runtime.context.JobContext"),
+        },
+        apiRefs = {
+            @APIRef(className = "javax.batch.api.listener.JobListener", methodNames = "afterJob()"),
+            @APIRef(className = "javax.batch.runtime.context.JobContext", methodNames = "getExitStatus()"),
+        },
+        strategy = "Have the batchlet set the job ES via jobCtx.setExitStatus(). Verify that a call to JobContext.getExitStatus() from within "
+        		+ "the scope of JobListener.afterJob() returns the correct value."
+    )
+    @Test
+    @org.junit.Test
+    public void testNonNullExitStatusIsSeenByAfterJob() throws Exception {
+        String METHOD = "testNonNullExitStatusIsSeenByAfterJob";
+
+        try {
+            Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            Reporter.log("set.job.exit.status=SET_JOB_EXIT_STATUS<p>");
+            Reporter.log("expected.job.exit.status=SET_JOB_EXIT_STATUS<p>");
+            jobParams.put("set.job.exit.status", ExitStatusBatchlet.SET_JOB_EXIT_STATUS);
+            jobParams.put("expected.job.exit.status", ExitStatusBatchlet.SET_JOB_EXIT_STATUS);
+
+            Reporter.log("Locate job XML file: jobContextExitStatusAfterJobTest.xml<p>");
+
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("jobContextExitStatusAfterJobTest", jobParams);
+            String jobExitStatus = execution1.getExitStatus();
+
+            assertWithMessage(null, ExitStatusBatchlet.SET_JOB_EXIT_STATUS, jobExitStatus);
+            assertWithMessage("Expect Job Execution to be COMPLETED", BatchStatus.COMPLETED, execution1.getBatchStatus());
+        } catch (Exception e) {
+            handleException(METHOD, e);
+        }
+    }
+    
+    @TCKTest(
+        versions = {"1.0"},
+        assertions = {"A JobListener artifact can obtain the user-defined exit status for the job via a call to JobContext.getExitStatus(). In the case where no exit "
+        		+ "status has been set, a job's exit status does not default to its batch status until after JobListener.afterJob() has been invoked."},
+        specRefs = {
+        	@SpecRef(version = "1.0", section = "8.7", 
+        		citations = "Exit status is set to the final batch status if it was not overridden by any of the override means described earlier in this list.", 
+        		notes = "Since JobListener is a batch artifact configured for the job, then it is able to set the job exit status via a call to setExitStatus(), even "
+        				+ "from the scope of afterJob(). Therefore, the batch runtime won't default a job's exit status until after the JobListener completes execution."),
+           	@SpecRef(version = "1.0", section = "9.2.1", notes = "API for javax.batch.api.listener.JobListener"),
+           	@SpecRef(version = "1.0", section = "10.9.1", notes = "API for javax.batch.runtime.context.JobContext"),
+        },
+        apiRefs = {
+            @APIRef(className = "javax.batch.api.listener.JobListener", methodNames = "afterJob()"),
+            @APIRef(className = "javax.batch.runtime.context.JobContext", methodNames = "getExitStatus()"),
+        },
+        strategy = "Do not set an exit status for a job. Verify that a call to JobContext.getExitStatus() from within the scope of JobListener.afterJob() returns "
+        		+ "null (and not a batch status)."
+    )
+    @Test
+    @org.junit.Test
+    public void testNullExitStatusIsSeenByAfterJob() throws Exception {
+        String METHOD = "testNullExitStatusIsSeenByAfterJob";
+
+        try {
+            Reporter.log("Create job parameters for execution #1:<p>");
+            Properties jobParams = new Properties();
+            Reporter.log("set.job.exit.status=DO_NOT_SET_JOB_EXIT_STATUS<p>");
+            Reporter.log("expected.job.exit.status=NULL_JOB_EXIT_STATUS<p>");
+            jobParams.put("set.job.exit.status", ExitStatusBatchlet.DO_NOT_SET_JOB_EXIT_STATUS);
+            jobParams.put("expected.job.exit.status", JobContextExitStatusListener.NULL_JOB_EXIT_STATUS);
+
+            Reporter.log("Locate job XML file: jobContextExitStatusAfterJobTest.xml<p>");
+
+            Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("jobContextExitStatusAfterJobTest", jobParams);
+            String jobExitStatus = execution1.getExitStatus();
+
+            //First assertion: by the time control is passed back to the Job Operator, the exit status should have defaulted from null to a COMPLETED batch status
+            assertWithMessage(null, BatchStatus.COMPLETED.toString(), jobExitStatus);
+            //Second assertion: If the exit status at the time of afterJob() is not a null value (as expected), the Job Listener will throw an exception which causes the job to fail
             assertWithMessage("Expect Job Execution to be COMPLETED", BatchStatus.COMPLETED, execution1.getBatchStatus());
         } catch (Exception e) {
             handleException(METHOD, e);
