@@ -43,6 +43,10 @@ public class ExitStatusBatchlet extends AbstractBatchlet {
     @BatchProperty(name="process.return.value")
     String processReturnValue;
     
+    @Inject    
+    @BatchProperty(name="throw.exception")
+    String throwException;
+    
     public static final String DO_NOT_SET_STEP_EXIT_STATUS = "Do not make a call to StepContext.setExitStatus()";
     public static final String SET_STEP_EXIT_STATUS = "Make a call to StepContext.setExitStatus(SET_STEP_EXIT_STATUS)";
     public static final String SET_STEP_EXIT_STATUS_NULL = "Explicitly make a call to StepContext.setExitStatus(null)";
@@ -54,8 +58,16 @@ public class ExitStatusBatchlet extends AbstractBatchlet {
     public static final String PROCESS_RETURN_VALUE = "Batchlet process() method returns BATCHLET_RETURN_VALUE";
     public static final String PROCESS_RETURN_VALUE_NULL = "Batchlet process() method returns null";
     
+    public static final String THROW_EXCEPTION_IMMEDIATELY = "Batchlet throws exception immediately after entering the process() method";
+    public static final String THROW_DELAYED_EXCEPTION = "Batchlet throws exception after Job- and StepContext have had a chance to set the exit status";
+    
     @Override
     public String process() throws Exception {
+    	
+    	//Throw exception immediately
+    	if(throwException!=null && throwException.equals(THROW_EXCEPTION_IMMEDIATELY)){
+    		throw new Exception(THROW_EXCEPTION_IMMEDIATELY);
+    	}
     	
     	//StepContext.setExitStatus()
     	if(setStepExitStatus==null || setStepExitStatus.equals(DO_NOT_SET_STEP_EXIT_STATUS)){
@@ -83,6 +95,11 @@ public class ExitStatusBatchlet extends AbstractBatchlet {
     	}
     	else{
     		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for set.job.exit.status");
+    	}
+    	
+    	//Throw delayed exception
+    	if(throwException!=null && throwException.equals(THROW_DELAYED_EXCEPTION)){
+    		throw new Exception(THROW_DELAYED_EXCEPTION);
     	}
     	
     	//Batchet.process()

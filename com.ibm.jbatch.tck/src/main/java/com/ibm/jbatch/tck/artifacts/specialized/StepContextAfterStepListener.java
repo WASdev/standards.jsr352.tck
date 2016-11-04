@@ -21,8 +21,8 @@ import javax.batch.api.listener.AbstractStepListener;
 import javax.batch.runtime.context.StepContext;
 import javax.inject.Inject;
 
-@javax.inject.Named("stepContextExitStatusListener")
-public class StepContextExitStatusListener extends AbstractStepListener {
+@javax.inject.Named("stepContextAfterStepListener")
+public class StepContextAfterStepListener extends AbstractStepListener {
     
 	@Inject 
     private StepContext stepCtx; 
@@ -30,6 +30,10 @@ public class StepContextExitStatusListener extends AbstractStepListener {
     @Inject    
     @BatchProperty(name="expected.step.exit.status")
     String expectedStepExitStatus;
+    
+    @Inject    
+    @BatchProperty(name="expected.step.batch.status")
+    String expectedStepBatchStatus;
     
     public static final String NULL_STEP_EXIT_STATUS = "null step exit status";
     
@@ -40,9 +44,16 @@ public class StepContextExitStatusListener extends AbstractStepListener {
     		stepExitStatus = NULL_STEP_EXIT_STATUS;
     	}
     	
-    	if(!stepExitStatus.equals(expectedStepExitStatus)){
+    	if(expectedStepExitStatus!=null && !stepExitStatus.equals(expectedStepExitStatus)){
     		String errorMessage = "StepContext.getExitStatus() has the wrong exit status value when it reaches StepListener.afterStep(). "
     				            + "The expected exit status is: " + expectedStepExitStatus + ", but found: " + stepExitStatus;
+    		throw new Exception(errorMessage);
+    	}
+    	
+    	String stepBatchStatus = stepCtx.getBatchStatus().toString();
+    	if(expectedStepBatchStatus!=null && !stepBatchStatus.equals(expectedStepBatchStatus)){
+    		String errorMessage = "StepContext.getBatchStatus() has the wrong batch status value when it reaches StepListener.afterStep(). "
+    				            + "The expected batch status is: " + expectedStepBatchStatus + ", but found: " + stepBatchStatus;
     		throw new Exception(errorMessage);
     	}
     	

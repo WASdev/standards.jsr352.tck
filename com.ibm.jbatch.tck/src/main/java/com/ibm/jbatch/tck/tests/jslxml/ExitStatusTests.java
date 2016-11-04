@@ -26,7 +26,7 @@ import javax.batch.runtime.JobExecution;
 import com.ibm.jbatch.tck.ann.*;
 import com.ibm.jbatch.tck.artifacts.specialized.ExitStatusBatchlet;
 import com.ibm.jbatch.tck.artifacts.specialized.JobContextExitStatusListener;
-import com.ibm.jbatch.tck.artifacts.specialized.StepContextExitStatusListener;
+import com.ibm.jbatch.tck.artifacts.specialized.StepContextAfterStepListener;
 import com.ibm.jbatch.tck.utils.JobOperatorBridge;
 
 import org.junit.BeforeClass;
@@ -161,10 +161,10 @@ public class ExitStatusTests {
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE_NULL);
             jobParams.put("expected.step.exit.status", ExitStatusBatchlet.SET_STEP_EXIT_STATUS);
 
-            Reporter.log("Locate job XML file: stepContextExitStatusAfterStepTest.xml<p>");
+            Reporter.log("Locate job XML file: stepContextAfterStepTest.xml<p>");
 
             Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
-            JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextExitStatusAfterStepTest", jobParams);
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextAfterStepTest", jobParams);
             String stepExitStatus = jobOp.getStepExecutions(execution1.getExecutionId()).get(0).getExitStatus();
 
             assertWithMessage(null, ExitStatusBatchlet.SET_STEP_EXIT_STATUS, stepExitStatus);
@@ -206,12 +206,12 @@ public class ExitStatusTests {
             Reporter.log("expected.step.exit.status=NULL_STEP_EXIT_STATUS<p>");
             jobParams.put("set.step.exit.status", ExitStatusBatchlet.DO_NOT_SET_STEP_EXIT_STATUS);
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE_NULL);
-            jobParams.put("expected.step.exit.status", StepContextExitStatusListener.NULL_STEP_EXIT_STATUS);
+            jobParams.put("expected.step.exit.status", StepContextAfterStepListener.NULL_STEP_EXIT_STATUS);
 
-            Reporter.log("Locate job XML file: stepContextExitStatusAfterStepTest.xml<p>");
+            Reporter.log("Locate job XML file: stepContextAfterStepTest.xml<p>");
 
             Reporter.log("Invoke startJobAndWaitForResult for execution #1<p>");
-            JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextExitStatusAfterStepTest", jobParams);
+            JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextAfterStepTest", jobParams);
             String stepExitStatus = jobOp.getStepExecutions(execution1.getExecutionId()).get(0).getExitStatus();
 
             //First assertion: by the time control is passed back to the Job Operator, the exit status should have defaulted from null to a COMPLETED batch status

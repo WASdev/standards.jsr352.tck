@@ -15,12 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<job id="stepContextExitStatusAfterStepTest" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+<job id="stepContextAfterStepTest" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
 	<step id="step1">
 		<listeners>
-			<listener ref="stepContextExitStatusListener">
+			<listener ref="stepContextAfterStepListener">
 				<properties>
 					<property name="expected.step.exit.status" value="#{jobParameters['expected.step.exit.status']}" />
+					<property name="expected.step.batch.status" value="#{jobParameters['expected.step.batch.status']}" />
 				</properties>
 			</listener>
 		</listeners>
@@ -28,6 +29,7 @@
 			<properties>
 				<property name="set.step.exit.status" value="#{jobParameters['set.step.exit.status']}"/>
 				<property name="process.return.value" value="#{jobParameters['process.return.value']}"/>
+				<property name="throw.exception" value="#{jobParameters['throw.exception']}"/>
 			</properties>
 		</batchlet>
 	</step>
