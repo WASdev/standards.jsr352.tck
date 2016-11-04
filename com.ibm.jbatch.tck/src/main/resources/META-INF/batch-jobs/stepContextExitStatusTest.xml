@@ -19,7 +19,7 @@
 	<step id="step1">
 		<batchlet ref="exitStatusBatchlet">
 			<properties>
-				<property name="set.exit.status" value="#{jobParameters['set.exit.status']}"/>
+				<property name="set.step.exit.status" value="#{jobParameters['set.step.exit.status']}"/>
 				<property name="process.return.value" value="#{jobParameters['process.return.value']}"/>
 			</properties>
 		</batchlet>

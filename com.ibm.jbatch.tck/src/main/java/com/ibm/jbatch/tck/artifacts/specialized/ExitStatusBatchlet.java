@@ -18,6 +18,7 @@ package com.ibm.jbatch.tck.artifacts.specialized;
 
 import javax.batch.api.AbstractBatchlet;
 import javax.batch.api.BatchProperty;
+import javax.batch.runtime.context.JobContext;
 import javax.batch.runtime.context.StepContext;
 import javax.inject.Inject;
 
@@ -26,51 +27,73 @@ public class ExitStatusBatchlet extends AbstractBatchlet {
 
     @Inject
     StepContext stepCtx;
+    
+    @Inject
+    JobContext jobCtx;
 
     @Inject    
-    @BatchProperty(name="set.exit.status")
-    String setExitStatus;
+    @BatchProperty(name="set.step.exit.status")
+    String setStepExitStatus;
+    
+    @Inject    
+    @BatchProperty(name="set.job.exit.status")
+    String setJobExitStatus;
     
     @Inject    
     @BatchProperty(name="process.return.value")
     String processReturnValue;
     
-    public static final String DO_NOT_SET_EXIT_STATUS = "Do not make a call to StepContext.setExitStatus()";
-    public static final String SET_EXIT_STATUS = "Make a call to StepContext.setExitStatus(SET_EXIT_STATUS)";
-    public static final String SET_EXIT_STATUS_NULL = "Explicitly make a call to StepContext.setExitStatus(null)";
+    public static final String DO_NOT_SET_STEP_EXIT_STATUS = "Do not make a call to StepContext.setExitStatus()";
+    public static final String SET_STEP_EXIT_STATUS = "Make a call to StepContext.setExitStatus(SET_STEP_EXIT_STATUS)";
+    public static final String SET_STEP_EXIT_STATUS_NULL = "Explicitly make a call to StepContext.setExitStatus(null)";
+    
+    public static final String DO_NOT_SET_JOB_EXIT_STATUS = "Do not make a call to JobContext.setExitStatus()";
+    public static final String SET_JOB_EXIT_STATUS = "Make a call to JobContext.setExitStatus(SET_JOB_EXIT_STATUS)";
+    public static final String SET_JOB_EXIT_STATUS_NULL = "Explicitly make a call to JobContext.setExitStatus(null)";
+    
     public static final String PROCESS_RETURN_VALUE = "Batchlet process() method returns BATCHLET_RETURN_VALUE";
     public static final String PROCESS_RETURN_VALUE_NULL = "Batchlet process() method returns null";
     
     @Override
     public String process() throws Exception {
     	
-    	if(setExitStatus==null){
-    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject a value for set.exit.status");
-    	}
-    	else if(setExitStatus.equals(DO_NOT_SET_EXIT_STATUS)){
+    	//StepContext.setExitStatus()
+    	if(setStepExitStatus==null || setStepExitStatus.equals(DO_NOT_SET_STEP_EXIT_STATUS)){
     		//Do nothing
     	}
-    	else if(setExitStatus.equals(SET_EXIT_STATUS)){
-    		stepCtx.setExitStatus(SET_EXIT_STATUS);
+    	else if(setStepExitStatus.equals(SET_STEP_EXIT_STATUS)){
+    		stepCtx.setExitStatus(SET_STEP_EXIT_STATUS);
     	}
-    	else if(setExitStatus.equals(SET_EXIT_STATUS_NULL)){
+    	else if(setStepExitStatus.equals(SET_STEP_EXIT_STATUS_NULL)){
     		stepCtx.setExitStatus(null);
     	}
     	else{
-    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for set.exit.status");
+    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for set.step.exit.status");
     	}
     	
-    	if(processReturnValue==null){
-    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject a value for process.return.value");
+    	//JobContext.setExitStatus()
+    	if(setJobExitStatus==null || setJobExitStatus.equals(DO_NOT_SET_JOB_EXIT_STATUS)){
+    		//Do nothing
+    	}
+    	else if(setJobExitStatus.equals(SET_JOB_EXIT_STATUS)){
+    		jobCtx.setExitStatus(SET_JOB_EXIT_STATUS);
+    	}
+    	else if(setJobExitStatus.equals(SET_JOB_EXIT_STATUS_NULL)){
+    		jobCtx.setExitStatus(null);
+    	}
+    	else{
+    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for set.job.exit.status");
+    	}
+    	
+    	//Batchet.process()
+    	if(processReturnValue==null || processReturnValue.equals(PROCESS_RETURN_VALUE_NULL)){
+    		return null;
     	}
     	else if(processReturnValue.equals(PROCESS_RETURN_VALUE)){
     		return PROCESS_RETURN_VALUE;
     	}
-    	else if(processReturnValue.equals(PROCESS_RETURN_VALUE_NULL)){
-    		return null;
-    	}
     	else{
-    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for proccess.return.value");
+    		throw new Exception("Jobs configured with ExitStatusBatchlet must inject one of the pre-defined constants for process.return.value");
     	}   
     }
 }

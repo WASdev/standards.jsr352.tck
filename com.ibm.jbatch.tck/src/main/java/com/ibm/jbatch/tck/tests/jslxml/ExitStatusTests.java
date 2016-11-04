@@ -73,9 +73,9 @@ public class ExitStatusTests {
         try {
             Reporter.log("Create job parameters for execution #1:<p>");
             Properties jobParams = new Properties();
-            Reporter.log("set.exit.status=SET_EXIT_STATUS<p>");
-            Reporter.log("process.return.value=BATCHLET_RETURN_VALUE<p>");
-            jobParams.put("set.exit.status", ExitStatusBatchlet.SET_EXIT_STATUS);
+            Reporter.log("set.step.exit.status=SET_STEP_EXIT_STATUS<p>");
+            Reporter.log("process.return.value=PROCESS_RETURN_VALUE<p>");
+            jobParams.put("set.step.exit.status", ExitStatusBatchlet.SET_STEP_EXIT_STATUS);
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE);
 
             Reporter.log("Locate job XML file: stepContextExitStatusTest.xml<p>");
@@ -113,9 +113,9 @@ public class ExitStatusTests {
         try {
             Reporter.log("Create job parameters for execution #1:<p>");
             Properties jobParams = new Properties();
-            Reporter.log("set.exit.status=SET_EXIT_STATUS<p>");
+            Reporter.log("set.step.exit.status=SET_STEP_EXIT_STATUS<p>");
             Reporter.log("process.return.value=PROCESS_RETURN_VALUE_NULL<p>");
-            jobParams.put("set.exit.status", ExitStatusBatchlet.SET_EXIT_STATUS);
+            jobParams.put("set.step.exit.status", ExitStatusBatchlet.SET_STEP_EXIT_STATUS);
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE_NULL);
 
             Reporter.log("Locate job XML file: stepContextExitStatusTest.xml<p>");
@@ -124,7 +124,7 @@ public class ExitStatusTests {
             JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextExitStatusTest", jobParams);
             String stepExitStatus = jobOp.getStepExecutions(execution1.getExecutionId()).get(0).getExitStatus();
 
-            assertWithMessage(null, ExitStatusBatchlet.SET_EXIT_STATUS, stepExitStatus);
+            assertWithMessage(null, ExitStatusBatchlet.SET_STEP_EXIT_STATUS, stepExitStatus);
             assertWithMessage("Expect Job Execution to be COMPLETED", BatchStatus.COMPLETED, execution1.getBatchStatus());
         } catch (Exception e) {
             handleException(METHOD, e);
@@ -153,12 +153,12 @@ public class ExitStatusTests {
         try {
             Reporter.log("Create job parameters for execution #1:<p>");
             Properties jobParams = new Properties();
-            Reporter.log("set.exit.status=SET_EXIT_STATUS<p>");
+            Reporter.log("set.step.exit.status=SET_STEP_EXIT_STATUS<p>");
             Reporter.log("process.return.value=PROCESS_RETURN_VALUE_NULL<p>");
-            Reporter.log("expected.exit.status=SET_EXIT_STATUS<p>");
-            jobParams.put("set.exit.status", ExitStatusBatchlet.SET_EXIT_STATUS);
+            Reporter.log("expected.step.exit.status=SET_STEP_EXIT_STATUS<p>");
+            jobParams.put("set.step.exit.status", ExitStatusBatchlet.SET_STEP_EXIT_STATUS);
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE_NULL);
-            jobParams.put("expected.exit.status", ExitStatusBatchlet.SET_EXIT_STATUS);
+            jobParams.put("expected.step.exit.status", ExitStatusBatchlet.SET_STEP_EXIT_STATUS);
 
             Reporter.log("Locate job XML file: stepContextExitStatusAfterStepTest.xml<p>");
 
@@ -166,7 +166,7 @@ public class ExitStatusTests {
             JobExecution execution1 = jobOp.startJobAndWaitForResult("stepContextExitStatusAfterStepTest", jobParams);
             String stepExitStatus = jobOp.getStepExecutions(execution1.getExecutionId()).get(0).getExitStatus();
 
-            assertWithMessage(null, ExitStatusBatchlet.SET_EXIT_STATUS, stepExitStatus);
+            assertWithMessage(null, ExitStatusBatchlet.SET_STEP_EXIT_STATUS, stepExitStatus);
             assertWithMessage("Expect Job Execution to be COMPLETED", BatchStatus.COMPLETED, execution1.getBatchStatus());
         } catch (Exception e) {
             handleException(METHOD, e);
@@ -200,12 +200,12 @@ public class ExitStatusTests {
         try {
             Reporter.log("Create job parameters for execution #1:<p>");
             Properties jobParams = new Properties();
-            Reporter.log("set.exit.status=DO_NOT_SET_EXIT_STATUS<p>");
+            Reporter.log("set.step.exit.status=DO_NOT_SET_STEP_EXIT_STATUS<p>");
             Reporter.log("process.return.value=PROCESS_RETURN_VALUE_NULL<p>");
-            Reporter.log("expected.exit.status=NULL_EXIT_STATUS<p>");
-            jobParams.put("set.exit.status", ExitStatusBatchlet.DO_NOT_SET_EXIT_STATUS);
+            Reporter.log("expected.step.exit.status=NULL_STEP_EXIT_STATUS<p>");
+            jobParams.put("set.step.exit.status", ExitStatusBatchlet.DO_NOT_SET_STEP_EXIT_STATUS);
             jobParams.put("process.return.value", ExitStatusBatchlet.PROCESS_RETURN_VALUE_NULL);
-            jobParams.put("expected.exit.status", StepContextExitStatusListener.NULL_EXIT_STATUS);
+            jobParams.put("expected.step.exit.status", StepContextExitStatusListener.NULL_STEP_EXIT_STATUS);
 
             Reporter.log("Locate job XML file: stepContextExitStatusAfterStepTest.xml<p>");
 

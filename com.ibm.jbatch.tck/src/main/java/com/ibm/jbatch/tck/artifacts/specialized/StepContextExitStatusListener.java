@@ -28,21 +28,21 @@ public class StepContextExitStatusListener extends AbstractStepListener {
     private StepContext stepCtx; 
     
     @Inject    
-    @BatchProperty(name="expected.exit.status")
-    String expectedExitStatus;
+    @BatchProperty(name="expected.step.exit.status")
+    String expectedStepExitStatus;
     
-    public static final String NULL_EXIT_STATUS = "null";
+    public static final String NULL_STEP_EXIT_STATUS = "null step exit status";
     
     @Override
     public void afterStep() throws Exception {
-    	String exitStatus = stepCtx.getExitStatus();
-    	if (exitStatus==null){
-    		exitStatus = NULL_EXIT_STATUS;
+    	String stepExitStatus = stepCtx.getExitStatus();
+    	if (stepExitStatus==null){
+    		stepExitStatus = NULL_STEP_EXIT_STATUS;
     	}
     	
-    	if(!exitStatus.equals(expectedExitStatus)){
+    	if(!stepExitStatus.equals(expectedStepExitStatus)){
     		String errorMessage = "StepContext.getExitStatus() has the wrong exit status value when it reaches StepListener.afterStep(). "
-    				            + "The expected exit status is: " + expectedExitStatus + ", but found: " + exitStatus;
+    				            + "The expected exit status is: " + expectedStepExitStatus + ", but found: " + stepExitStatus;
     		throw new Exception(errorMessage);
     	}
     	
