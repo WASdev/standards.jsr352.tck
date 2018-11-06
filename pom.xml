@@ -111,8 +111,8 @@
         -->
 
         <!-- Run against latest version of RI -->
-        <batch.api.version>1.0.2-SNAPSHOT</batch.api.version>
-        <batch.impl.version>1.0.2-SNAPSHOT</batch.impl.version>
+        <batch.api.version>1.0.1</batch.api.version>
+        <batch.impl.version>1.0.1</batch.impl.version>
 
         <!-- This version of TCK -->
         <batch.tck.version>1.0.1-SNAPSHOT</batch.tck.version>
@@ -158,8 +158,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.batch</groupId>
-                <artifactId>javax.batch-api</artifactId>
+                <groupId>jakarta.batch</groupId>
+                <artifactId>jakarta.batch-api</artifactId>
                 <version>${batch.api.version}</version>
             </dependency>
             <dependency>

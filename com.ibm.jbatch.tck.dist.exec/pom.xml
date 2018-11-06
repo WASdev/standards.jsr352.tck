@@ -49,11 +49,11 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>javax.batch</groupId>
-                                    <artifactId>javax.batch-api</artifactId>
+                                    <groupId>jakarta.batch</groupId>
+                                    <artifactId>jakarta.batch-api</artifactId>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/executeTCK/runAgainstRI</outputDirectory>
-                                    <destFileName>javax.batch-api.jar</destFileName>
+                                    <destFileName>jakarta.batch-api.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.ibm.jbatch</groupId>
