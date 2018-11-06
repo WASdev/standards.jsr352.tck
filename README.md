@@ -2,7 +2,7 @@ standards.jsr352.tck
 =======================
 ## Important Links
 
-* [Running the Official SE TCK](https://github.com/WASdev/standards.jsr352.tck/wiki/SE_TCK_Official)
+* [Running the Official 1.0 SE TCK](https://github.com/WASdev/standards.jsr352.tck/wiki/1.0_SE_TCK_Official)
 * [Running the TCK in Maven](https://github.com/WASdev/standards.jsr352.tck/wiki/SE_TCK_In_Maven)
 * [1.0 SE TCK Change History](https://github.com/WASdev/standards.jsr352.tck/wiki/1.0_SE_TCK_ChangeHistory)
 
